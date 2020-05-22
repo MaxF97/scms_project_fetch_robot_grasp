@@ -28,13 +28,13 @@ classdef CameraRGBD < handle
             % subscribe to camera data
             self.rgbRawSub = rossubscriber('/head_camera/rgb/image_raw');
             self.depthRawSub = rossubscriber('/head_camera/depth_registered/image_raw');            
-            % Need to pause for 0.5 second to allow data to be collected
+            % Need to pause for 0.5 seconds not really sure why
             pause(0.5);
         end
         
         %% Get the current rgb and depth data from sensors
         function GetCurrentImage(self)                       
-            % Store images into container in MATLAB format
+            % Store the current images into container in MATLAB format
             self.rgbImg = readImage(self.rgbRawSub.LatestMessage);
             self.grayImg = rgb2gray(self.rgbImg);
             self.depthImg = readImage(self.depthRawSub.LatestMessage);
