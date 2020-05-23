@@ -36,14 +36,15 @@ classdef ProcessCameraData < handle
                 end
             end
             
+            % Find the middle of point of all blue points
             point = [0,0];
             point = round(mean(bluePoints));
+            
             % Check if blue block is present on table
             if ~isnan(point)
                 redBand(point(1),point(2)) = 255;
                 greenBand(point(1),point(2)) = 0;
                 blueBand(point(1),point(2)) = 0;
-
                 
                 self.blueBlock.u = point(1);
                 self.blueBlock.v = point(2);
@@ -123,15 +124,15 @@ classdef ProcessCameraData < handle
 %             X = sqrt((d^2*(1+(f/x)^2)-d^2)/(1+(1+(f/x)^2)^2));
             
             
-            self.blueBlock.X = sqrt(depth^2/(1+(f/(u-px))^2));
+            self.blueBlock.X = d/sqrt(1+(y/x)^2+(f/x)^2);%sqrt(d^2/(1+(f/(u-px))^2));
             if u < px
                 self.blueBlock.X = -self.blueBlock.X;
             end
-            self.blueBlock.Y = sqrt(depth^2/(1+(f/(py-v))^2));
+            self.blueBlock.Y = d/sqrt(1+(x/y)^2+(f/y)^2);%sqrt(d^2/(1+(f/(py-v))^2));
             if v < py
                 self.blueBlock.Y = -self.blueBlock.Y;
             end
-            self.blueBlock.Z = sqrt(depth^2/(1+((py-v)/f)^2));
+            self.blueBlock.Z = abs(self.blueBlock.X)*f/x%sqrt(d^2/(1+((py-v)/f)^2));
         end
     end
 end
