@@ -42,14 +42,14 @@ classdef ProcessCameraData < handle
             
             % Check if blue block is present on table
             if ~isnan(point)
-                redBand(point(1),point(2)) = 255;
-                greenBand(point(1),point(2)) = 0;
-                blueBand(point(1),point(2)) = 0;
+%                 redBand(point(1),point(2)) = 255;
+%                 greenBand(point(1),point(2)) = 0;
+%                 blueBand(point(1),point(2)) = 0;
                 
-                self.blueBlock.u = point(1);
-                self.blueBlock.v = point(2);
-                im = cat(3,redBand,greenBand,blueBand);
-                imshow(im);
+                self.blueBlock.u = point(2);
+                self.blueBlock.v = point(1);
+%                 im = cat(3,redBand,greenBand,blueBand);
+%                 imshow(im);
                 
                 self.determineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v);
                 
@@ -105,34 +105,101 @@ classdef ProcessCameraData < handle
             % use other function to get the depth of the corner points
         end
         
+        function DetectRedBlock(self, camera)
+            % Break RGB image into colour bands
+            redBand = camera.rgbImg(:,:,1);
+            greenBand = camera.rgbImg(:,:,2);
+            blueBand = camera.rgbImg(:,:,3);
+            
+            % Search for blue points on image
+            % i.e. points with low red and green values
+            redPoints = [];
+            counter = 0;
+            for i=1:camera.rgbRawSub.LatestMessage.Height
+                for j=1:camera.rgbRawSub.LatestMessage.Width
+                    if greenBand(i,j) < 10 && blueBand(i,j) < 10
+                        counter = counter+1;
+                        redPoints(counter,:) = [i,j];
+                    end
+                end
+            end
+            
+            % Find the middle of point of all blue points
+            point = [0,0];
+            point = round(mean(redPoints));
+            
+            % Check if blue block is present on table
+            if ~isnan(point)              
+                self.redBlock.u = point(2);
+                self.redBlock.v = point(1);
+                
+                self.determineBlocksLocation(camera, self.redBlock.u, self.redBlock.v);
+                
+                self.noRedBlock = false;
+            else
+                self.noRedBlock = true;
+                self.redBlock.u = NaN;
+                self.redBlock.v = NaN;
+            end
+        end
+        
+         function DetectGreenBlock(self, camera)
+            % Break RGB image into colour bands
+            redBand = camera.rgbImg(:,:,1);
+            greenBand = camera.rgbImg(:,:,2);
+            blueBand = camera.rgbImg(:,:,3);
+            
+            % Search for blue points on image
+            % i.e. points with low red and green values
+            greenPoints = [];
+            counter = 0;
+            for i=1:camera.rgbRawSub.LatestMessage.Height
+                for j=1:camera.rgbRawSub.LatestMessage.Width
+                    if redBand(i,j) < 10 && blueBand(i,j) < 10
+                        counter = counter+1;
+                        greenPoints(counter,:) = [i,j];
+                    end
+                end
+            end
+            
+            % Find the middle of point of all blue points
+            point = [0,0];
+            point = round(mean(greenPoints));
+            
+            % Check if blue block is present on table
+            if ~isnan(point)              
+                self.greenBlock.u = point(2);
+                self.greenBlock.v = point(1);
+                
+                self.determineBlocksLocation(camera, self.greenBlock.u, self.greenBlock.v);
+                
+                self.noGreenBlock = false;
+            else
+                self.noGreenBlock = true;
+                self.greenBlock.u = NaN;
+                self.greenBlock.v = NaN;
+            end
+         end
+        
         %% Determine pick up location
         function determineBlocksLocation(self, camera, u, v) % add rotation into here I think.
-            d = camera.depthImg(u,v);
+            d = camera.depthImg(v,u);
             px = camera.px;
             py = camera.py;
             f = camera.f;
             
             y = py-v;
             x = u-px;
-            % i need to find depth on the x,y axis (not the full depth)
-%             d^2
-%             (1+(f/y)^2)
-%             (1+(f/y)^2)^2
-%             
-%             Y = sqrt((d^2*(1+(f/y)^2)-d^2)/(1+(1+(f/y)^2)^2));
-%             
-%             X = sqrt((d^2*(1+(f/x)^2)-d^2)/(1+(1+(f/x)^2)^2));
-            
-            
+                   
             self.blueBlock.X = d/sqrt(1+(y/x)^2+(f/x)^2);%sqrt(d^2/(1+(f/(u-px))^2));
-            if u < px
+            if u > px
                 self.blueBlock.X = -self.blueBlock.X;
             end
             self.blueBlock.Y = d/sqrt(1+(x/y)^2+(f/y)^2);%sqrt(d^2/(1+(f/(py-v))^2));
-            if v < py
+            if v > py
                 self.blueBlock.Y = -self.blueBlock.Y;
             end
-            self.blueBlock.Z = abs(self.blueBlock.X)*f/x%sqrt(d^2/(1+((py-v)/f)^2));
+            self.blueBlock.Z = abs(self.blueBlock.X*f/x);%sqrt(d^2/(1+((py-v)/f)^2));
         end
     end
 end

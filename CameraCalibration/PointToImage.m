@@ -12,10 +12,14 @@ K = [f,0,px;
      0,f,py;
      0,0,1];
  
-X_cam = [15;10;80;1];%[8;5;80;1]; %3D location
-IM = eye(3,4);
+% X_cam = [15;10;80;1];%[8;5;80;1]; %3D location
+% IM = eye(3,4);
+% 
+% x = K*IM*X_cam;
+% 
+% u = x(1)/x(3)
+% v = x(2)/x(3)
+u = 1 
+v = 1
 
-x = K*IM*X_cam;
-
-u = x(1)/x(3)
-v = x(2)/x(3)
+x = zeros(3,
