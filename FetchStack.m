@@ -4,10 +4,17 @@ close all
 camera = CameraRGBD;
 sensorProcessing = ProcessCameraData;
 sensorProcessing.DetectBlueBlock(camera);
-
+sensorProcessing.DetectRedBlock(camera);
+sensorProcessing.DetectGreenBlock(camera);
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);
-% imshow(camera.grayImg);
+%             kern = [0, 1, 0;
+%                 1, -4, 1;
+%                 0, 1, 0];
+%            cameraImage = uint8(conv2(camera.grayImg, kern, 'same'));
+% imshow(cameraImage);
+% imwrite(cameraImage, 'block.jpg');
+
 % hold on
 % plot(sensorProcessing.blockCornerPoints);
 

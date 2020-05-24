@@ -29,7 +29,7 @@ classdef ProcessCameraData < handle
             counter = 0;
             for i=1:camera.rgbRawSub.LatestMessage.Height
                 for j=1:camera.rgbRawSub.LatestMessage.Width
-                    if greenBand(i,j) < 10 && redBand(i,j) < 10
+                    if greenBand(i,j) < 10 && redBand(i,j) < 10 && blueBand(i,j) > 80
                         counter = counter+1;
                         bluePoints(counter,:) = [i,j];
                     end
@@ -42,16 +42,19 @@ classdef ProcessCameraData < handle
             
             % Check if blue block is present on table
             if ~isnan(point)
-%                 redBand(point(1),point(2)) = 255;
-%                 greenBand(point(1),point(2)) = 0;
-%                 blueBand(point(1),point(2)) = 0;
+                redBand(point(1),point(2)) = 255;
+                greenBand(point(1),point(2)) = 0;
+                blueBand(point(1),point(2)) = 0;
                 
                 self.blueBlock.u = point(2);
                 self.blueBlock.v = point(1);
-%                 im = cat(3,redBand,greenBand,blueBand);
-%                 imshow(im);
+                im = cat(3,redBand,greenBand,blueBand);
+                figure;
+                imshow(im);
                 
-                self.determineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v);
+                self.determineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v)
+                
+                %self.determineBlocksRotation(camera, self.blueBlock.u, self.blueBlock.v, bluePoints);
                 
                 self.noBlueBlock = false;
             else
@@ -68,37 +71,6 @@ classdef ProcessCameraData < handle
             
             
             
-%             kern = [0, 1, 0;
-%                 1, -4, 1;
-%                 0, 1, 0];
-%             cameraImage = uint8(conv2(camera.grayImg, kern, 'same')); 
-%              %cameraImage = camera.rbgImg;
-% %            
-%             self.blockCornerPoints = detectHarrisFeatures(cameraImage,'MinQuality', 0.2);
-%             imshow(cameraImage);
-%             hold on
-%             plot(self.blockCornerPoints);
-%              blockImage = imread('block.jpg');
-%              pointsBlock = detectORBFeatures(blockImage);
-%              pointsCamera = detectORBFeatures(cameraImage);
-%              [featuresBlock, validPointsBlock] = extractFeatures(blockImage, pointsBlock);
-%              [featuresCamera, validPointsCamera] = extractFeatures(cameraImage, pointsCamera);
-%              
-%              indexPairs = matchFeatures(featuresBlock, featuresCamera);
-%              matchedPointsBlock = validPointsBlock(indexPairs(:,1));
-%              matchedPointsCamera = validPointsCamera(indexPairs(:,2));
-%              
-%              figure(1);
-%              showMatchedFeatures(blockImage,cameraImage,matchedPointsBlock,matchedPointsCamera,'montage');
-%              title('Matching Points Using ORB');
-%              
-%              [tform,inlierBlock,inlierCamera] = estimateGeometricTransform(matchedPointsBlock,matchedPointsCamera,'similarity');
-%              
-%              figure(2);
-%              showMatchedFeatures(blockImage,cameraImage,inlierBlock,inlierCamera, 'montage');
-%              title('Matching Points Using ORB and RANSAC (inliers only)');
-%             a=1;
-%             self.DepthOfBlock(camera.depthImg);
             
             % somehow work out how to group the points
             
@@ -117,7 +89,7 @@ classdef ProcessCameraData < handle
             counter = 0;
             for i=1:camera.rgbRawSub.LatestMessage.Height
                 for j=1:camera.rgbRawSub.LatestMessage.Width
-                    if greenBand(i,j) < 10 && blueBand(i,j) < 10
+                    if greenBand(i,j) < 10 && blueBand(i,j) < 10 && redBand(i,j) > 80
                         counter = counter+1;
                         redPoints(counter,:) = [i,j];
                     end
@@ -129,9 +101,17 @@ classdef ProcessCameraData < handle
             point = round(mean(redPoints));
             
             % Check if blue block is present on table
-            if ~isnan(point)              
+            if ~isnan(point)  
+                redBand(point(1),point(2)) = 0;
+                greenBand(point(1),point(2)) = 0;
+                blueBand(point(1),point(2)) = 255;
+                
+                
                 self.redBlock.u = point(2);
                 self.redBlock.v = point(1);
+                im = cat(3,redBand,greenBand,blueBand);
+                figure;
+                imshow(im);
                 
                 self.determineBlocksLocation(camera, self.redBlock.u, self.redBlock.v);
                 
@@ -155,7 +135,7 @@ classdef ProcessCameraData < handle
             counter = 0;
             for i=1:camera.rgbRawSub.LatestMessage.Height
                 for j=1:camera.rgbRawSub.LatestMessage.Width
-                    if redBand(i,j) < 10 && blueBand(i,j) < 10
+                    if redBand(i,j) < 10 && blueBand(i,j) < 10 && greenBand(i,j) > 80
                         counter = counter+1;
                         greenPoints(counter,:) = [i,j];
                     end
@@ -167,9 +147,17 @@ classdef ProcessCameraData < handle
             point = round(mean(greenPoints));
             
             % Check if blue block is present on table
-            if ~isnan(point)              
+            if ~isnan(point) 
+redBand(point(1),point(2)) = 0;
+                redBand(point(1),point(2)) = 255;
+                greenBand(point(1),point(2)) = 0;
+                blueBand(point(1),point(2)) = 0;
+                
                 self.greenBlock.u = point(2);
                 self.greenBlock.v = point(1);
+                im = cat(3,redBand,greenBand,blueBand);
+                figure;
+                imshow(im);
                 
                 self.determineBlocksLocation(camera, self.greenBlock.u, self.greenBlock.v);
                 
@@ -200,6 +188,43 @@ classdef ProcessCameraData < handle
                 self.blueBlock.Y = -self.blueBlock.Y;
             end
             self.blueBlock.Z = abs(self.blueBlock.X*f/x);%sqrt(d^2/(1+((py-v)/f)^2));
+        end
+    
+        %% Determine the rotation of the block
+        function determineBlocksRotation(self, camera, u, v, blockPoints)
+            kern = [0, 1, 0;
+                1, -4, 1;
+                0, 1, 0];
+            cameraImage = uint8(conv2(camera.grayImg, kern, 'same')); 
+             %cameraImage = camera.rbgImg;
+% %            
+%             self.blockCornerPoints = detectHarrisFeatures(cameraImage,'MinQuality', 0.2);
+%             imshow(cameraImage);
+%             hold on
+%             plot(self.blockCornerPoints);
+
+             blockImage = imread('block.jpg');
+             pointsBlock = detectORBFeatures(blockImage);
+             pointsCamera = detectORBFeatures(cameraImage);
+             [featuresBlock, validPointsBlock] = extractFeatures(blockImage, pointsBlock);
+             [featuresCamera, validPointsCamera] = extractFeatures(cameraImage, pointsCamera);
+%              
+             indexPairs = matchFeatures(featuresBlock, featuresCamera);
+             matchedPointsBlock = validPointsBlock(indexPairs(:,1));
+             matchedPointsCamera = validPointsCamera(indexPairs(:,2));
+%              
+             figure(1);
+             showMatchedFeatures(blockImage,cameraImage,matchedPointsBlock,matchedPointsCamera,'montage');
+%              title('Matching Points Using ORB');
+%              
+%              [tform,inlierBlock,inlierCamera] = estimateGeometricTransform(matchedPointsBlock,matchedPointsCamera,'similarity');
+%              
+%              figure(2);
+%              showMatchedFeatures(blockImage,cameraImage,inlierBlock,inlierCamera, 'montage');
+%              title('Matching Points Using ORB and RANSAC (inliers only)');
+%             a=1;
+%             self.DepthOfBlock(camera.depthImg);
+
         end
     end
 end
