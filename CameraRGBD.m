@@ -8,18 +8,13 @@ classdef CameraRGBD < handle
         rgbImg = [];
         grayImg = [];
         depthImg = [];
-        
-        % Intrinsic Camera paramters obtained from performing a camera calibration
-%         px=319.166862061345000;                         % Principal point X
-%         py=239.433267282686018;                         % Principal point Y
-%         f= (553.599234489766104+553.614309214737091)/2; % Focal Length
 
         % Intrinsic Camera paramters obtained from 
         px = 320.5;                 % Principal point x
-        py= 240.5;                  % Principal point y
+        py = 240.5;                 % Principal point y
         f = 554.254691191187;       % Focal length
-        K = [f, 0, px; ...          % Camera Matrix
-             0, f, py; ...
+        K = [554.254691191187, 0, 320.5; ...          % Camera Matrix
+             0, 554.254691191187, 240.5; ...
              0, 0, 1];
     end
     

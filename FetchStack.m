@@ -1,8 +1,8 @@
 clear all 
 close all
 
-camera = CameraRGBD;
-sensorProcessing = ProcessCameraData;
+camera = CameraRGBD();
+sensorProcessing = ProcessCameraData();
 sensorProcessing.DetectBlueBlock(camera);
 sensorProcessing.DetectRedBlock(camera);
 sensorProcessing.DetectGreenBlock(camera);
