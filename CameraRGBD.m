@@ -1,4 +1,4 @@
-clas
+classdef CameraRGBD < handle
     properties 
         % Sensor subscribers
         rgbRawSub = [];
@@ -21,8 +21,6 @@ clas
         K = [f, 0, px; ...          % Camera Matrix
              0, f, py; ...
              0, 0, 1];
-
-     
     end
     
     methods
