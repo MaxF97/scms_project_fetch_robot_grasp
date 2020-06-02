@@ -15,7 +15,7 @@ class ROSInterface:
         self.b = None
         self.c = None
         self.d = None
-        self.pub = rospy.Publisher('Check', Bool)
+        self.pub = rospy.Publisher('Check', Bool,queue_size = 10)
         self.rate = rospy.Rate(10) # 10hz
 
     def Callback(self,data):
