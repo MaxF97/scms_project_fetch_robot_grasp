@@ -209,7 +209,8 @@ classdef ProcessCameraData < handle
         end
     
         %% Determine the rotation of the block
-%         function determineBlocksRotation(self, camera, u, v, blockPoints)
+        function determineBlocksRotation(self, camera, u, v, blockPoints)
+        end
 %             kern = [0, 1, 0;
 %                 1, -4, 1;
 %                 0, 1, 0];
