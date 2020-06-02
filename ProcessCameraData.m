@@ -42,15 +42,15 @@ classdef ProcessCameraData < handle
             
             % Check if blue block is present on table
             if ~isnan(point)
-                redBand(point(1),point(2)) = 255;
-                greenBand(point(1),point(2)) = 0;
-                blueBand(point(1),point(2)) = 0;
+%                 redBand(point(1),point(2)) = 255;
+%                 greenBand(point(1),point(2)) = 0;
+%                 blueBand(point(1),point(2)) = 0;
                 
                 self.blueBlock.u = point(2);
                 self.blueBlock.v = point(1);
-                im = cat(3,redBand,greenBand,blueBand);
-                figure;
-                imshow(im);
+%                 im = cat(3,redBand,greenBand,blueBand);
+%                 figure;
+%                 imshow(im);
                 
                 self.blueBlock.X_cam = self.DetermineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v)
                 self.blueBlock.X_base = self.TransformCameraToBase(self.blueBlock.X_cam);
@@ -89,16 +89,16 @@ classdef ProcessCameraData < handle
             
             % Check if blue block is present on table
             if ~isnan(point)  
-                redBand(point(1),point(2)) = 0;
-                greenBand(point(1),point(2)) = 0;
-                blueBand(point(1),point(2)) = 255;
+%                 redBand(point(1),point(2)) = 0;
+%                 greenBand(point(1),point(2)) = 0;
+%                 blueBand(point(1),point(2)) = 255;
                 
                 
                 self.redBlock.u = point(2);
                 self.redBlock.v = point(1);
-                im = cat(3,redBand,greenBand,blueBand);
-                figure;
-                imshow(im);
+%                 im = cat(3,redBand,greenBand,blueBand);
+%                 figure;
+%                 imshow(im);
                 
                 self.redBlock.X_cam = self.DetermineBlocksLocation(camera, self.redBlock.u, self.redBlock.v);
                 self.redBlock.X_base = self.TransformCameraToBase(self.redBlock.X_cam);
@@ -136,16 +136,16 @@ classdef ProcessCameraData < handle
             
             % Check if blue block is present on table
             if ~isnan(point) 
-                redBand(point(1),point(2)) = 0;
-                redBand(point(1),point(2)) = 255;
-                greenBand(point(1),point(2)) = 0;
-                blueBand(point(1),point(2)) = 0;
+%                 redBand(point(1),point(2)) = 0;
+%                 redBand(point(1),point(2)) = 255;
+%                 greenBand(point(1),point(2)) = 0;
+%                 blueBand(point(1),point(2)) = 0;
                 
                 self.greenBlock.u = point(2);
                 self.greenBlock.v = point(1);
-                im = cat(3,redBand,greenBand,blueBand);
-                figure;
-                imshow(im);
+%                 im = cat(3,redBand,greenBand,blueBand);
+%                 figure;
+%                 imshow(im);
                 
                 self.greenBlock.X_cam = self.DetermineBlocksLocation(camera, self.greenBlock.u, self.greenBlock.v);
                 self.greenBlock.X_base = self.TransformCameraToBase(self.greenBlock.X_cam);

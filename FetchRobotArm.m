@@ -1,47 +1,37 @@
 classdef FetchRobotArm < handle
     properties
-        % Sensor subscribers
-        q1Pub = [];
-        q2Pub = [];
-        q3Pub = [];
-        q4Pub = [];
-        q5Pub = [];
-        q6Pub = [];
-        q7Pub = [];
-        
-        gripperLPublisher= [];
-        gripperRPublisher= [];
-        
-        cameraAnglePublisher = [];
-        
-        q1;
-        q2;
-        q3;
-        q4;
-        q5;
-        q6;
-        q7;
-        
-        
-        gripperL;
-        gripperR;
-        
-        cameraAngle;
+        pose;
+        poseMsg;
+        motionComplete = false;
     end
     
     methods
         %% Constructor
         function self = FetchRobotArm()
             try rosinit; end
-            self.PublishToRobotArm();
-            self.Publish();
+            self.PublishToMoveit();
+            self.SubscribeToMoveit();
         end
         
-        function PublishToRobotArm = method1(obj,inputArg)
-            self.q1Pub = rospublisher('/head_camera/rgb/image_raw');
-            % Augustine: publishing to joint topics 1-7
-            % Sam: publish to lgripper and Rgripper
-            % Max: publsih Camera Angle
+        function PublishToMoveit(self)
+            [self.pose, self.poseMsg] = rospublisher('Pose', 'geometry_msgs/PoseStamped');
+        end
+        
+        function SubscribeToMoveit(self)
+            self.motionComplete = rossubscriber('Check', 'std_msgs/Bool');
+        end
+        
+        function MoveRobotArm(self, block)
+            self.msg.poseMsg.Position.X = block.X_Base(1);
+            self.msg.poseMsg.Position.Y = block.X_Base(1);
+            self.msg.poseMsg.Position.X = block.X_Base(1);
+            
+            % Once orientation calc is complete replace with
+            self.msg.poseMsg.Orientation.X = sqrt(2); %block.quat(1);
+            self.msg.poseMsg.Orientation.Y = 0; %block.quat(2);
+            self.msg.poseMsg.Orientation.Z = -sqrt(2); %block.quat(3);
+            self.msg.poseMsg.Orientation.W = 1; %block.quat(4);
+            send(self.pose,self.poseMsg);
         end
     end
 end
