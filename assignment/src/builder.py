@@ -18,9 +18,13 @@ if __name__ == "__main__":
     Ros = ROSInterface()
     Arm = RobotArm()
     Ros.Subscriber()
+    Ros.Publisher(0)
     while not rospy.is_shutdown():
         while 1:
             Arm.MoveToPose(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
             if Arm.CheckGoal() == 1:
+                Ros.Publisher(1)
                 break
+            else:
+                Ros.Publisher(0)
         

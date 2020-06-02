@@ -11,15 +11,15 @@ class RobotArm:
     def __init__(self):
         self.moveGroup = MoveGroupInterface("arm_with_torso", "base_link")
         self.planning_scene = PlanningSceneInterface("base_link")
+        self.planning_scene.addCube("my_front_ground", 2, 1.1, 0.0, -1.0)
+        self.planning_scene.addCube("my_back_ground", 2, -1.2, 0.0, -1.0)
+        self.planning_scene.addCube("my_left_ground", 2, 0.0, 1.2, -1.0)
+        self.planning_scene.addCube("my_right_ground", 2, 0.0, -1.2, -1.0)
         self.planning_scene.removeCollisionObject("my_front_ground")
         self.planning_scene.removeCollisionObject("my_back_ground")
         self.planning_scene.removeCollisionObject("my_right_ground")
         self.planning_scene.removeCollisionObject("my_left_ground")
         self.planning_scene.removeCollisionObject("table1")
-        self.planning_scene.addCube("my_front_ground", 2, 1.1, 0.0, -1.0)
-        self.planning_scene.addCube("my_back_ground", 2, -1.2, 0.0, -1.0)
-        self.planning_scene.addCube("my_left_ground", 2, 0.0, 1.2, -1.0)
-        self.planning_scene.addCube("my_right_ground", 2, 0.0, -1.2, -1.0)
         #self.planning_scene.addCube("table1", 0.913, 1.0032, -0.004666, 0.021071)
 
     def MoveToPose(self,X,Y,Z,x,y,z,w):
