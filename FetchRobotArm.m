@@ -30,7 +30,7 @@ classdef FetchRobotArm < handle
             self.poseMsg.Pose.Orientation.X = sqrt(2); %block.quat(1);
             self.poseMsg.Pose.Orientation.Y = 0; %block.quat(2);
             self.poseMsg.Pose.Orientation.Z = -sqrt(2); %block.quat(3);
-            self.poseMsg.Pose.Orientation.W = 1; %block.quat(4);
+            self.poseMsg.Pose.Orientation.W = 0; %block.quat(4);
             send(self.pose,self.poseMsg);
         end
     end
