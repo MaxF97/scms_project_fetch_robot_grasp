@@ -33,7 +33,10 @@ The folder in this repository called 'assignment' must be saved in the following
 4.1. Open the gazebo environment by typing the following into the terminal:
 
      roslaunch fetch_gazebo A3_environment.launch
-4.2. Start running the python script by typing the following into a new terminal:
+4.2. Start moveit
+     
+     roslaunch fetch_moveit_config move_group.launch
+4.3. Start running the python script by typing the following into a new terminal:
 
      rosrun assignment builder.py
-4.3  Start the program by running the MATLAB script 'FetchStack.m'
+4.4.  Start the program by running the MATLAB script 'FetchStack.m'
