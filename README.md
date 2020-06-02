@@ -15,8 +15,6 @@ These can be found in the attached links. To get these packages use:
      cd ~/catkin_ws/src
      git clone https://github.com/mikeferguson/moveit_python
 
-Use 'git clone URL' inside the ~/catkin_ws/src folder to get these packages
-
 # 2. Setup Gazebo Enivronment Launch File
 The files located in the 'environment' folder of this repository need to be located in the following places:
 
