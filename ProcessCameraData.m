@@ -160,7 +160,7 @@ classdef ProcessCameraData < handle
         
         %% Determine pick up location
         function X_cam = DetermineBlocksLocation(self, camera, u, v) % add rotation into here I think.
-            Z = camera.depthImg(v,u);
+            Z = camera.depthImg(v,u)+self.blockWidth/2;
             K = camera.K;
             
             x = [u*Z; ...
