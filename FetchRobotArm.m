@@ -23,8 +23,8 @@ classdef FetchRobotArm < handle
         
         function MoveRobotArm(self, block)
             self.poseMsg.Pose.Position.X = block.X_base(1);
-            self.poseMsg.Pose.Position.Y = block.X_base(1);
-            self.poseMsg.Pose.Position.X = block.X_base(1);
+            self.poseMsg.Pose.Position.Y = block.X_base(2);
+            self.poseMsg.Pose.Position.Z = block.X_base(3);
             
             % Once orientation calc is complete replace with
             self.poseMsg.Pose.Orientation.X = sqrt(2); %block.quat(1);
