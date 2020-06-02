@@ -9,11 +9,11 @@ the following packages are required to run this code.
 
 These can be found in the attached links. To get these packages use:
 
-cd ~/catkin_ws/src
-git clone https://github.com/fetchrobotics/fetch_ros
+     cd ~/catkin_ws/src
+     git clone https://github.com/fetchrobotics/fetch_ros
 
-cd ~/catkin_ws/src
-git clone https://github.com/mikeferguson/moveit_python
+     cd ~/catkin_ws/src
+     git clone https://github.com/mikeferguson/moveit_python
 
 Use 'git clone URL' inside the ~/catkin_ws/src folder to get these packages
 
