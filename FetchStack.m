@@ -1,11 +1,21 @@
 clear all 
 close all
 
+% Create camera object
 camera = CameraRGBD();
+% Create object for processing camera data
 sensorProcessing = ProcessCameraData();
+
+% Detect blue and red block
 sensorProcessing.DetectBlueBlock(camera);
 sensorProcessing.DetectRedBlock(camera);
-sensorProcessing.DetectGreenBlock(camera);
+
+% Move to blue block
+keyboard;
+fetch = FetchRobotArm();
+fetch.MoveRobotArm(sensorProcessing.blueBlock);
+
+%sensorProcessing.DetectGreenBlock(camera);
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);
 %             kern = [0, 1, 0;
