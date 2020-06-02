@@ -22,15 +22,15 @@ classdef FetchRobotArm < handle
         end
         
         function MoveRobotArm(self, block)
-            self.msg.poseMsg.Position.X = block.X_Base(1);
-            self.msg.poseMsg.Position.Y = block.X_Base(1);
-            self.msg.poseMsg.Position.X = block.X_Base(1);
+            self.poseMsg.Pose.Position.X = block.X_base(1);
+            self.poseMsg.Pose.Position.Y = block.X_base(1);
+            self.poseMsg.Pose.Position.X = block.X_base(1);
             
             % Once orientation calc is complete replace with
-            self.msg.poseMsg.Orientation.X = sqrt(2); %block.quat(1);
-            self.msg.poseMsg.Orientation.Y = 0; %block.quat(2);
-            self.msg.poseMsg.Orientation.Z = -sqrt(2); %block.quat(3);
-            self.msg.poseMsg.Orientation.W = 1; %block.quat(4);
+            self.poseMsg.Pose.Orientation.X = sqrt(2); %block.quat(1);
+            self.poseMsg.Pose.Orientation.Y = 0; %block.quat(2);
+            self.poseMsg.Pose.Orientation.Z = -sqrt(2); %block.quat(3);
+            self.poseMsg.Pose.Orientation.W = 1; %block.quat(4);
             send(self.pose,self.poseMsg);
         end
     end
