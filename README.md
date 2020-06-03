@@ -23,6 +23,7 @@ must be saved in:
 
 ~/catkin_ws/src/fetch_gazebo/fetch_gazebo/launch
 
+
 A3_world.sdf
 must be saved in: 
 
