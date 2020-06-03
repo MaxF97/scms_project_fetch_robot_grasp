@@ -20,7 +20,7 @@ class RobotArm:
         self.planning_scene.removeCollisionObject("my_right_ground")
         self.planning_scene.removeCollisionObject("my_left_ground")
         self.planning_scene.removeCollisionObject("table1")
-        #self.planning_scene.addCube("table1", 0.913, 1.0032, -0.004666, 0.021071)
+        
 
     def MoveToPose(self,X,Y,Z,x,y,z,w):
         self.poseStamped = PoseStamped()
@@ -30,6 +30,7 @@ class RobotArm:
         self.poseStamped.pose.position.x = X
         self.poseStamped.pose.position.y = Y 
         self.poseStamped.pose.position.z = Z
+        
         self.poseStamped.pose.orientation.x = x
         self.poseStamped.pose.orientation.y = y
         self.poseStamped.pose.orientation.z = z

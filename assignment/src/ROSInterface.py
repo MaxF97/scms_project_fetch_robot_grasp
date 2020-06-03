@@ -15,7 +15,8 @@ class ROSInterface:
         self.b = None
         self.c = None
         self.d = None
-        self.pub = rospy.Publisher('Check', Bool,queue_size = 10)
+        self.callback = None
+        self.pub = rospy.Publisher('Check', Bool, queue_size = 5)
         self.rate = rospy.Rate(10) # 10hz
 
     def Callback(self,data):
@@ -26,7 +27,9 @@ class ROSInterface:
         self.b = data.pose.orientation.y
         self.c = data.pose.orientation.z
         self.d = data.pose.orientation.w
-        rospy.loginfo(rospy.get_caller_id() + "%f %f %f %f %f %f %F", self.x,self.y,self.z,self.a,self.b,self.c,self.d)
+
+        self.callback = 1
+        rospy.loginfo(rospy.get_caller_id() + "%f %f %f %f %f %f %f", self.x,self.y,self.z,self.a,self.b,self.c,self.d)
     
     def Subscriber(self):
         rospy.Subscriber("Pose", PoseStamped, self.Callback)

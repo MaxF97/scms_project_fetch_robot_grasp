@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
-#note 
-#import tf 
+#!/usr/bin/env python 
 
 import rospy
 
 from robot_arm import RobotArm
 from ROSInterface import ROSInterface
-from geometry_msgs.msg import Pose
+
 
 
 if __name__ == "__main__":
@@ -16,16 +13,27 @@ if __name__ == "__main__":
 
     # Setup clients
     Ros = ROSInterface()
+    while 1:
+        try:
+            Ros.Subscriber()
+            break
+        except:
+            rospy.loginfo('waiting for matlab')
+
     Arm = RobotArm()
-    Ros.Subscriber()
-    #Init
-    #Ros.Publisher(0)
+
     while not rospy.is_shutdown():
-        while 1:
+        if (Ros.callback == 1):
             Arm.MoveToPose(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
             if Arm.CheckGoal() == 1:
-                Ros.Publisher(1)
-                break
+                try:
+                    Ros.Publisher(1)
+                except rospy.ROSInterruptException:
+                    pass
+                Ros.callback = 0
             else:
-                Ros.Publisher(0)
+                try:
+                    Ros.Publisher(0)
+                except rospy.ROSInterruptException:
+                    pass
         
