@@ -20,14 +20,17 @@ The files located in the 'environment' folder of this repository need to be loca
 
 A3_environment.launch
 must be saved in: 
+
 ~/catkin_ws/src/fetch_gazebo/fetch_gazebo/launch
 
 A3_world.sdf
 must be saved in: 
+
 ~/catkin_ws/src/fetch_gazebo/fetch_gazebo/worlds
 
 # 3. Save Python Files Correctly
 The folder in this repository called 'assignment' must be saved in the following location:
+
 ~/catkin_ws/src
 
 # 4. To run program
