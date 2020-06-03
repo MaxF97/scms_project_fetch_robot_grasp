@@ -176,27 +176,35 @@ classdef ProcessCameraData < handle
         
         %% Transfer point in camera coordinate to base
         function X_base = TransformCameraToBase(self, X_cam)
+            % Create a transformation tree
             tftree = rostf;
             pause(0.5);
             
+            % Create transformation tree ROS Node
             node = ros.Node('/Transform/Points/Camera_to_base');
+            % Retrieve transformation tree
             tftree = ros.TransformationTree(node);
             pause(0.5);
             
+            % Get latest time
             updateTime = tftree.LastUpdateTime;
+            % Wait for the transform between 2 frames
             waitForTransform(tftree,'base_link','head_camera_rgb_optical_frame',5);
-
+            
+            % Define the point in the cameras coordinate frame
             pointCam = rosmessage('geometry_msgs/PointStamped');
             pointCam.Header.FrameId = 'head_camera_rgb_optical_frame';
             pointCam.Point.X = X_cam(1);
             pointCam.Point.Y = X_cam(2);
             pointCam.Point.Z = X_cam(3);
             
+            % Transform point to the base link
             pointBase = transform(tftree, 'base_link', pointCam);
             X_base = [pointBase.Point.X; ...
                       pointBase.Point.Y; ...
                       pointBase.Point.Z];
                   
+            % Clear ROS node
             clear('node');
         end
     
@@ -220,7 +228,8 @@ classdef ProcessCameraData < handle
             
             slope = theta;
             
-            
+            % Move along block to edges while the slope doesn't change too
+            % much
             while (slope > theta - 0.01) && (slope < theta + 0.01)
                 counter = counter + 1;
                 dl = camera.depthImg(v,u-counter);
@@ -236,6 +245,8 @@ classdef ProcessCameraData < handle
                 b = abs(xr-xl);
                 slope = atan(h/b);
             end
+            % re-calculate the slope by taking the second last points
+            % ie corners of block
             dl = camera.depthImg(v,u-counter+2);
             dr = camera.depthImg(v,u+counter-2);
             
@@ -249,44 +260,11 @@ classdef ProcessCameraData < handle
             b = abs(xr-xl);
             
             theta = atan(h/b);
+            
             % Convert to quaternium
             quat = eul2quat([0,-pi/2,theta], 'ZYX'); % default is ZYX
             
         end
-%             kern = [0, 1, 0;
-%                 1, -4, 1;
-%                 0, 1, 0];
-%             cameraImage = uint8(conv2(camera.grayImg, kern, 'same')); 
-%              %cameraImage = camera.rbgImg;
-% % %            
-% %             self.blockCornerPoints = detectHarrisFeatures(cameraImage,'MinQuality', 0.2);
-% %             imshow(cameraImage);
-% %             hold on
-% %             plot(self.blockCornerPoints);
-% 
-%              blockImage = imread('block.jpg');
-%              pointsBlock = detectORBFeatures(blockImage);
-%              pointsCamera = detectORBFeatures(cameraImage);
-%              [featuresBlock, validPointsBlock] = extractFeatures(blockImage, pointsBlock);
-%              [featuresCamera, validPointsCamera] = extractFeatures(cameraImage, pointsCamera);
-% %              
-%              indexPairs = matchFeatures(featuresBlock, featuresCamera);
-%              matchedPointsBlock = validPointsBlock(indexPairs(:,1));
-%              matchedPointsCamera = validPointsCamera(indexPairs(:,2));
-% %              
-%              figure(1);
-%              showMatchedFeatures(blockImage,cameraImage,matchedPointsBlock,matchedPointsCamera,'montage');
-% %              title('Matching Points Using ORB');
-% %              
-% %              [tform,inlierBlock,inlierCamera] = estimateGeometricTransform(matchedPointsBlock,matchedPointsCamera,'similarity');
-% %              
-% %              figure(2);
-% %              showMatchedFeatures(blockImage,cameraImage,inlierBlock,inlierCamera, 'montage');
-% %              title('Matching Points Using ORB and RANSAC (inliers only)');
-% %             a=1;
-% %             self.DepthOfBlock(camera.depthImg);
-% 
-%         end
     end
 end
 
