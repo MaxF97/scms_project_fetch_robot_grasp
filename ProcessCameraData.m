@@ -207,7 +207,7 @@ classdef ProcessCameraData < handle
             dl = camera.depthImg(v,u-counter);
             dr = camera.depthImg(v,u+counter);
             % Height of triangle
-            h = dl - dr;
+            h = dr - dl;
             % Get the y coordinates of at each point either side of centre
             left = self.DetermineBlocksLocation(camera, u-counter, v);
             xl = left(1);
@@ -226,7 +226,7 @@ classdef ProcessCameraData < handle
                 dl = camera.depthImg(v,u-counter);
                 dr = camera.depthImg(v,u+counter);
                 
-                h = dl - dr;
+                h = dr - dl;
                 
                 left = self.DetermineBlocksLocation(camera, u-counter, v);
                 xl = left(1);
@@ -239,7 +239,7 @@ classdef ProcessCameraData < handle
             dl = camera.depthImg(v,u-counter+2);
             dr = camera.depthImg(v,u+counter-2);
             
-            h = dl - dr;
+            h = dr - dl;
             
             left = self.DetermineBlocksLocation(camera, u-counter+2, v);
             xl = left(1);
@@ -250,7 +250,7 @@ classdef ProcessCameraData < handle
             
             theta = atan(h/b);
             % Convert to quaternium
-            quat = eul2quat([theta,-pi/2,0], 'XYZ');
+            quat = eul2quat([0,-pi/2,theta], 'ZYX'); % default is ZYX
             
         end
 %             kern = [0, 1, 0;

@@ -4,6 +4,7 @@ close all
 % Create an origin point to move arm to 
 
 %% Create objects of relevant classes
+disp('Creating objects to subscribe and publish to fetch robot')
 % Create camera object
 camera = CameraRGBD();
 % Create object for processing camera data
@@ -12,11 +13,11 @@ sensorProcessing = ProcessCameraData();
 fetch = FetchRobotArm();
 
 % Detect blue and red block
-% disp('detecting blue block')
+% disp('Detecting blue block')
 % sensorProcessing.DetectBlueBlock(camera);
-% disp('detecting red block')
+% disp('Detecting red block')
 % sensorProcessing.DetectRedBlock(camera);
-disp('detecting green block')
+disp('Detecting green block')
 sensorProcessing.DetectGreenBlock(camera);
 
 %% Move to blue block
