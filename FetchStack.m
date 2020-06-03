@@ -1,21 +1,38 @@
 clear all 
 close all
 
+% Create an origin point to move arm to 
+
+%% Create objects of relevant classes
 % Create camera object
 camera = CameraRGBD();
 % Create object for processing camera data
 sensorProcessing = ProcessCameraData();
+% Create object for moving robot
+fetch = FetchRobotArm();
 
 % Detect blue and red block
-sensorProcessing.DetectBlueBlock(camera);
-sensorProcessing.DetectRedBlock(camera);
+% disp('detecting blue block')
+% sensorProcessing.DetectBlueBlock(camera);
+% disp('detecting red block')
+% sensorProcessing.DetectRedBlock(camera);
+disp('detecting green block')
+sensorProcessing.DetectGreenBlock(camera);
 
-% Move to blue block
+%% Move to blue block
+% insert way point just above this one
+% blueWaypoint = sensorProcessing.blueBlock;
+% blueWaypoint.X_base(3) = blueWaypoint.X_base(3) + 0.16;
+% fetch.MoveRobotArm(blueWaypoint);
+% keyboard;
+% fetch.MoveRobotArm(sensorProcessing.blueBlock);
+
+greenWaypoint = sensorProcessing.greenBlock;
+greenWaypoint.X_base(3) = greenWaypoint.X_base(3) + 0.16;
+fetch.MoveRobotArm(greenWaypoint);
 keyboard;
-fetch = FetchRobotArm();
-fetch.MoveRobotArm(sensorProcessing.blueBlock);
+fetch.MoveRobotArm(sensorProcessing.greenBlock);
 
-%sensorProcessing.DetectGreenBlock(camera);
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);
 %             kern = [0, 1, 0;

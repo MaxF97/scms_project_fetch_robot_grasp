@@ -27,10 +27,10 @@ classdef FetchRobotArm < handle
             self.poseMsg.Pose.Position.Z = block.X_base(3);
             
             % Once orientation calc is complete replace with
-            self.poseMsg.Pose.Orientation.X = sqrt(2); %block.quat(1);
-            self.poseMsg.Pose.Orientation.Y = 0; %block.quat(2);
-            self.poseMsg.Pose.Orientation.Z = -sqrt(2); %block.quat(3);
-            self.poseMsg.Pose.Orientation.W = 0; %block.quat(4);
+            self.poseMsg.Pose.Orientation.X = block.quat(1);%sqrt(2); %block.quat(1);
+            self.poseMsg.Pose.Orientation.Y = block.quat(2);%0; %block.quat00(2);
+            self.poseMsg.Pose.Orientation.Z = block.quat(3);%-sqrt(2); %block.quat(3);
+            self.poseMsg.Pose.Orientation.W = block.quat(4);%0; %block.quat(4);
             send(self.pose,self.poseMsg);
         end
     end

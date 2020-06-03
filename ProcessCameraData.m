@@ -52,9 +52,9 @@ classdef ProcessCameraData < handle
 %                 figure;
 %                 imshow(im);
                 
-                self.blueBlock.X_cam = self.DetermineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v)
+                self.blueBlock.X_cam = self.DetermineBlocksLocation(camera, self.blueBlock.u, self.blueBlock.v);
                 self.blueBlock.X_base = self.TransformCameraToBase(self.blueBlock.X_cam);
-                %self.determineBlocksRotation(camera, self.blueBlock.u, self.blueBlock.v, bluePoints);
+                self.blueBlock.quat = self.determineBlocksRotation(camera, self.blueBlock.u, self.blueBlock.v);
                 
                 self.noBlueBlock = false;
             else
@@ -102,6 +102,7 @@ classdef ProcessCameraData < handle
                 
                 self.redBlock.X_cam = self.DetermineBlocksLocation(camera, self.redBlock.u, self.redBlock.v);
                 self.redBlock.X_base = self.TransformCameraToBase(self.redBlock.X_cam);
+                self.redBlock.quat = self.determineBlocksRotation(camera, self.redBlock.u, self.redBlock.v);
                 
                 self.noRedBlock = false;
             else
@@ -149,6 +150,7 @@ classdef ProcessCameraData < handle
                 
                 self.greenBlock.X_cam = self.DetermineBlocksLocation(camera, self.greenBlock.u, self.greenBlock.v);
                 self.greenBlock.X_base = self.TransformCameraToBase(self.greenBlock.X_cam);
+                self.greenBlock.quat = self.determineBlocksRotation(camera, self.greenBlock.u, self.greenBlock.v);
                 
                 self.noGreenBlock = false;
             else
@@ -159,27 +161,17 @@ classdef ProcessCameraData < handle
          end
         
         %% Determine pick up location
-        function X_cam = DetermineBlocksLocation(self, camera, u, v) % add rotation into here I think.
+        function X_cam = DetermineBlocksLocation(self, camera, u, v)
+            % Find Z value of point (add half the size of the block)
             Z = camera.depthImg(v,u)+self.blockWidth/2;
+            % Camera intrinsic properties matrix
             K = camera.K;
-            
+            % extrinsic properties
             x = [u*Z; ...
                  v*Z; ...
                  Z];
+            % Calculate the objects position in the camera's reference frame
             X_cam = inv(K)*x;
-            
-%             y = py-v;
-%             x = u-px;
-%                    
-%             self.blueBlock.X = d/sqrt(1+(y/x)^2+(f/x)^2);%sqrt(d^2/(1+(f/(u-px))^2));
-%             if u > px
-%                 self.blueBlock.X = -self.blueBlock.X;
-%             end
-%             self.blueBlock.Y = d/sqrt(1+(x/y)^2+(f/y)^2);%sqrt(d^2/(1+(f/(py-v))^2));
-%             if v > py
-%                 self.blueBlock.Y = -self.blueBlock.Y;
-%             end
-%             self.blueBlock.Z = abs(self.blueBlock.X*f/x);%sqrt(d^2/(1+((py-v)/f)^2));
         end
         
         %% Transfer point in camera coordinate to base
@@ -191,7 +183,7 @@ classdef ProcessCameraData < handle
             tftree = ros.TransformationTree(node);
             pause(0.5);
             
-            updateTime = tftree.LastUpdateTime
+            updateTime = tftree.LastUpdateTime;
             waitForTransform(tftree,'base_link','head_camera_rgb_optical_frame',5);
 
             pointCam = rosmessage('geometry_msgs/PointStamped');
@@ -205,11 +197,61 @@ classdef ProcessCameraData < handle
                       pointBase.Point.Y; ...
                       pointBase.Point.Z];
                   
-            clear('node')
+            clear('node');
         end
     
         %% Determine the rotation of the block
-        function determineBlocksRotation(self, camera, u, v, blockPoints)
+        function quat = determineBlocksRotation(self, camera, u, v)
+            % Depth of image either side of object
+            counter = 2;
+            dl = camera.depthImg(v,u-counter);
+            dr = camera.depthImg(v,u+counter);
+            % Height of triangle
+            h = dl - dr;
+            % Get the y coordinates of at each point either side of centre
+            left = self.DetermineBlocksLocation(camera, u-counter, v);
+            xl = left(1);
+            right = self.DetermineBlocksLocation(camera, u+counter, v);
+            xr = right(1);
+            % Base of triangle
+            b = abs(xr-xl);
+            % Angle of object
+            theta = atan(h/b);
+            
+            slope = theta;
+            
+            
+            while (slope > theta - 0.01) && (slope < theta + 0.01)
+                counter = counter + 1;
+                dl = camera.depthImg(v,u-counter);
+                dr = camera.depthImg(v,u+counter);
+                
+                h = dl - dr;
+                
+                left = self.DetermineBlocksLocation(camera, u-counter, v);
+                xl = left(1);
+                right = self.DetermineBlocksLocation(camera, u+counter, v);
+                xr = right(1);
+                
+                b = abs(xr-xl);
+                slope = atan(h/b);
+            end
+            dl = camera.depthImg(v,u-counter+2);
+            dr = camera.depthImg(v,u+counter-2);
+            
+            h = dl - dr;
+            
+            left = self.DetermineBlocksLocation(camera, u-counter+2, v);
+            xl = left(1);
+            right = self.DetermineBlocksLocation(camera, u+counter-2, v);
+            xr = right(1);
+            
+            b = abs(xr-xl);
+            
+            theta = atan(h/b);
+            % Convert to quaternium
+            quat = eul2quat([theta,-pi/2,0], 'XYZ');
+            
         end
 %             kern = [0, 1, 0;
 %                 1, -4, 1;
