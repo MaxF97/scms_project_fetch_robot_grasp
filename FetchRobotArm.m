@@ -58,7 +58,7 @@ classdef FetchRobotArm < handle
             waypoint = block;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
-            keyboard;
+%             keyboard;
             self.MoveRobotArm(block);
             % close gripper code goes here
         end

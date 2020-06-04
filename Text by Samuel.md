@@ -1,1 +1,0 @@
-Written Text By Samuel
