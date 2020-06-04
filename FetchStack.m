@@ -1,7 +1,7 @@
 clear all 
 close all
 
-% Create an origin point to move arm to 
+% Create an origin point to move arm too after placing
 
 %% Create objects of relevant classes
 disp('Creating objects to subscribe and publish to fetch robot')
@@ -12,6 +12,7 @@ sensorProcessing = ProcessCameraData();
 % Create object for moving robot
 fetch = FetchRobotArm();
 
+
 % Detect blue and red block
 % disp('Detecting blue block')
 % sensorProcessing.DetectBlueBlock(camera);
@@ -21,17 +22,21 @@ disp('Detecting green block')
 sensorProcessing.DetectGreenBlock(camera);
 
 %% Move to blue block
-% insert way point just above this one
-% blueWaypoint = sensorProcessing.blueBlock;
-% blueWaypoint.X_base(3) = blueWaypoint.X_base(3) + 0.16;
-% fetch.MoveRobotArm(blueWaypoint);
-% keyboard;
-% fetch.MoveRobotArm(sensorProcessing.blueBlock);
+% if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
+%     % Waypoint just above the blue block
+%     blueWaypoint = sensorProcessing.blueBlock;
+%     blueWaypoint.X_base(3) = blueWaypoint.X_base(3) + 0.16;
+%     fetch.MoveRobotArm(blueWaypoint);
+%     keyboard;
+%     fetch.MoveRobotArm(sensorProcessing.blueBlock);
+% else
+%     % Right side of program flow chart
+% end
 
 greenWaypoint = sensorProcessing.greenBlock;
 greenWaypoint.X_base(3) = greenWaypoint.X_base(3) + 0.16;
 fetch.MoveRobotArm(greenWaypoint);
-keyboard;
+% keyboard;
 fetch.MoveRobotArm(sensorProcessing.greenBlock);
 
 %% Leave temporarily for plotting image Data (let Max remove when ready)

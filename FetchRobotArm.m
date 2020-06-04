@@ -3,6 +3,9 @@ classdef FetchRobotArm < handle
         pose;
         poseMsg;
         motionComplete = false;
+        
+        gripper;
+        gripperMsg;
     end
     
     methods
@@ -13,25 +16,63 @@ classdef FetchRobotArm < handle
             self.SubscribeToMoveit();
         end
         
+        %% Set up Publish Pose to topic
         function PublishToMoveit(self)
             [self.pose, self.poseMsg] = rospublisher('Pose', 'geometry_msgs/PoseStamped');
         end
         
+        %% Set up Subribe to see when movement is complete
         function SubscribeToMoveit(self)
             self.motionComplete = rossubscriber('Check', 'std_msgs/Bool');
         end
         
+        %% Gripper Publisher
+        function PublishToGripper(self)
+            [self.gripper, self.gripperMsg] = rospublisher('State', 'std_msgs/Bool'); %
+            %[self.changeState, self.changeStateMsg] = rospublisher('MoveToDesiredState', 'std_msgs/Bool');
+        end
+        
+        %% Move Robot Arm to Pose
         function MoveRobotArm(self, block)
             self.poseMsg.Pose.Position.X = block.X_base(1);
             self.poseMsg.Pose.Position.Y = block.X_base(2);
             self.poseMsg.Pose.Position.Z = block.X_base(3);
-            
-            % Once orientation calc is complete replace with
-            self.poseMsg.Pose.Orientation.X = block.quat(1);%sqrt(2); %block.quat(1);
-            self.poseMsg.Pose.Orientation.Y = block.quat(2);%0; %block.quat00(2);
-            self.poseMsg.Pose.Orientation.Z = block.quat(3);%-sqrt(2); %block.quat(3);
-            self.poseMsg.Pose.Orientation.W = block.quat(4);%0; %block.quat(4);
+       
+            self.poseMsg.Pose.Orientation.X = block.quat(1);
+            self.poseMsg.Pose.Orientation.Y = block.quat(2);
+            self.poseMsg.Pose.Orientation.Z = block.quat(3);
+            self.poseMsg.Pose.Orientation.W = block.quat(4);
             send(self.pose,self.poseMsg);
+            
+            % should I put something in here to wait till it is complete?
+            disp('Waiting for motion to be complete');
+            pause(1);
+            while self.motionComplete.LatestMessage == 0
+            end
+        end
+        
+        %% Pick up block
+        function PickUpBlock(self, block)
+            waypoint = block;
+            waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
+            self.MoveRobotArm(waypoint);
+            self.MoveRobotArm(sensorProcessing.greenBlock);
+            % close gripper code goes here
+        end
+        
+        %% Place the block
+        function PlaceTheBlock(self, pose)
+            waypoint = pose;
+            waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
+            self.MoveRobotArm(waypoint);
+            self.MoveRobotArm(sensorProcessing.greenBlock);
+            % Open gripper code goes here
+        end
+        %% Return arm to Origin
+        function MoveArmToOrigin(self)
+            origin.X_base = [0;0;0];
+            origin.quat = [0,0,0,0];
+            self.MoveRobotArm(origin);
         end
     end
 end
