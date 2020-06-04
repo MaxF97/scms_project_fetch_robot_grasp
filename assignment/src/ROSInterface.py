@@ -8,6 +8,8 @@ from std_msgs.msg import Bool
 
 class ROSInterface:
     def __init__(self):
+        rospy.init_node("fetch_builder",anonymous=True)
+        # Variables for endeffector pose
         self.x = None
         self.y = None
         self.z = None
@@ -15,8 +17,12 @@ class ROSInterface:
         self.b = None
         self.c = None
         self.d = None
-        self.callback = None
-        self.pub = rospy.Publisher('Check', Bool, queue_size = 5)
+        #callback function runs => =1
+        self.callback = 0
+        #Check the arm reach the goal 
+        self.check = 0
+        #Publisher
+        self.pub = rospy.Publisher('Check', Bool , queue_size = 10)
         self.rate = rospy.Rate(10) # 10hz
 
     def Callback(self,data):
@@ -34,7 +40,10 @@ class ROSInterface:
     def Subscriber(self):
         rospy.Subscriber("Pose", PoseStamped, self.Callback)
         
-    def Publisher(self,check):
-        self.pub.publish(check)
+    def Publisher(self):
+        self.pub.publish(self.check)
         self.rate.sleep()
+
+    def GetCheck(self,check):
+        self.check = check
 

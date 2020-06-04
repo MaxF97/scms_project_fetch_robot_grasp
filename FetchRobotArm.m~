@@ -47,7 +47,7 @@ classdef FetchRobotArm < handle
             % should I put something in here to wait till it is complete?
             disp('Waiting for motion to be complete');
             pause(1);
-            while self.motionComplete.LatestMessage.Data == 0 
+            while self.motionComplete.LatestMessage.D == 0 
             end
         end
         
