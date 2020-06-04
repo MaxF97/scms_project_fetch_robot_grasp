@@ -16,28 +16,25 @@ fetch = FetchRobotArm();
 % Detect blue and red block
 % disp('Detecting blue block')
 % sensorProcessing.DetectBlueBlock(camera);
-% disp('Detecting red block')
-% sensorProcessing.DetectRedBlock(camera);
-disp('Detecting green block')
-sensorProcessing.DetectGreenBlock(camera);
+disp('Detecting red block')
+sensorProcessing.DetectRedBlock(camera);
+% disp('Detecting green block')
+% sensorProcessing.DetectGreenBlock(camera);
 
 %% Move to blue block
 % if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
-%     % Waypoint just above the blue block
-%     blueWaypoint = sensorProcessing.blueBlock;
-%     blueWaypoint.X_base(3) = blueWaypoint.X_base(3) + 0.16;
-%     fetch.MoveRobotArm(blueWaypoint);
-%     keyboard;
-%     fetch.MoveRobotArm(sensorProcessing.blueBlock);
+%     fetch.PickUpBlock(sensorProcessing.blueBlock);
 % else
 %     % Right side of program flow chart
 % end
 
-greenWaypoint = sensorProcessing.greenBlock;
-greenWaypoint.X_base(3) = greenWaypoint.X_base(3) + 0.16;
-fetch.MoveRobotArm(greenWaypoint);
-% keyboard;
-fetch.MoveRobotArm(sensorProcessing.greenBlock);
+% greenWaypoint = sensorProcessing.greenBlock;
+% greenWaypoint.X_base(3) = greenWaypoint.X_base(3) + 0.16;
+% fetch.MoveRobotArm(greenWaypoint);
+% % keyboard;
+% fetch.MoveRobotArm(sensorProcessing.greenBlock);
+disp('Picking Up Red Blcok');
+fetch.PickUpBlock(sensorProcessing.redBlock);
 
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);

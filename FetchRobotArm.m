@@ -19,11 +19,13 @@ classdef FetchRobotArm < handle
         %% Set up Publish Pose to topic
         function PublishToMoveit(self)
             [self.pose, self.poseMsg] = rospublisher('Pose', 'geometry_msgs/PoseStamped');
+            pause(0.5);
         end
         
         %% Set up Subribe to see when movement is complete
         function SubscribeToMoveit(self)
             self.motionComplete = rossubscriber('Check', 'std_msgs/Bool');
+            pause(0.5);
         end
         
         %% Gripper Publisher
@@ -56,7 +58,8 @@ classdef FetchRobotArm < handle
             waypoint = block;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
-            self.MoveRobotArm(sensorProcessing.greenBlock);
+            keyboard;
+            self.MoveRobotArm(block);
             % close gripper code goes here
         end
         
@@ -65,7 +68,8 @@ classdef FetchRobotArm < handle
             waypoint = pose;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
-            self.MoveRobotArm(sensorProcessing.greenBlock);
+            keyboard;
+            self.MoveRobotArm(pose);
             % Open gripper code goes here
         end
         %% Return arm to Origin
