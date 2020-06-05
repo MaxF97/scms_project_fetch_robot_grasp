@@ -41,11 +41,24 @@ if __name__ == "__main__":
                 Ros.GetCheck(0)
         if(counter == 2):
             GripHand.GripClose()
-            GripHand.GripOpen()
+            #GripHand.GripOpen()
             counter+=1
-        if(counter == 1):
-            print(counter)
-        if(counter == 2):
-            print(counter)
+        if(counter == 3):
+            #print(counter)
             print("yes")
+            Arm.OriginReturn(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
+            counter+=1
+        if(counter == 4):
+            print("hahha")
+            Arm.OriginPart2(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
+            counter+=1
+
+        if(counter == 5):
+            print ("oh no")
+            Arm.OriginPart3(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
+            counter+=1
+        if(counter == 6):
+            print("yesterday Today")
+            Arm.MoveToPose(0.708, -0.026, 0.9, Ros.a, Ros.b, Ros.c, Ros.d)
+
         

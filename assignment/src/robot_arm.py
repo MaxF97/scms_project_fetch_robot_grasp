@@ -39,6 +39,58 @@ class RobotArm:
         self.moveGroup.moveToPose(self.poseStamped, 'gripper_link')
         self.result = self.moveGroup.get_move_action().get_result()
 
+    def OriginReturn(self,X,Y,Z,x,y,z,w):
+        #First Move to Above Block
+        self.poseStamped = PoseStamped()
+        self.poseStamped.header.frame_id = 'base_link'
+        self.poseStamped.header.stamp = rospy.Time.now()
+
+        self.poseStamped.pose.position.x = X
+        self.poseStamped.pose.position.y = Y 
+        self.poseStamped.pose.position.z = Z + 0.2
+        
+        self.poseStamped.pose.orientation.x = x
+        self.poseStamped.pose.orientation.y = y
+        self.poseStamped.pose.orientation.z = z
+        self.poseStamped.pose.orientation.w = w
+
+        self.moveGroup.moveToPose(self.poseStamped, 'gripper_link')
+        self.result = self.moveGroup.get_move_action().get_result()    
+
+    def OriginPart2(self,X,Y,Z,x,y,z,w):
+        self.poseStamped = PoseStamped()
+        self.poseStamped.header.frame_id = 'base_link'
+        self.poseStamped.header.stamp = rospy.Time.now()
+
+        self.poseStamped.pose.position.x = 0.35
+        self.poseStamped.pose.position.y = 0.37
+        self.poseStamped.pose.position.z = Z + 0.2
+        
+        self.poseStamped.pose.orientation.x = x
+        self.poseStamped.pose.orientation.y = y
+        self.poseStamped.pose.orientation.z = z
+        self.poseStamped.pose.orientation.w = w
+
+        self.moveGroup.moveToPose(self.poseStamped, 'gripper_link')
+        self.result = self.moveGroup.get_move_action().get_result() 
+
+    def OriginPart3(self,X,Y,Z,x,y,z,w):
+        self.poseStamped = PoseStamped()
+        self.poseStamped.header.frame_id = 'base_link'
+        self.poseStamped.header.stamp = rospy.Time.now()
+
+        self.poseStamped.pose.position.x = 0.35
+        self.poseStamped.pose.position.y = 0.37
+        self.poseStamped.pose.position.z = 0.55
+        
+        self.poseStamped.pose.orientation.x = x
+        self.poseStamped.pose.orientation.y = y
+        self.poseStamped.pose.orientation.z = z
+        self.poseStamped.pose.orientation.w = w
+
+        self.moveGroup.moveToPose(self.poseStamped, 'gripper_link')
+        self.result = self.moveGroup.get_move_action().get_result()    
+
     def CheckGoal(self):
         if self.result:
             if self.result.error_code.val == MoveItErrorCodes.SUCCESS:
