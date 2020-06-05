@@ -46,9 +46,8 @@ classdef FetchRobotArm < handle
             self.poseMsg.Pose.Orientation.W = block.quat(4);
             send(self.pose,self.poseMsg);
             
-            % should I put something in here to wait till it is complete?
             disp('Waiting for motion to be complete');
-            pause(1);
+            pause(0.5);
             while self.motionComplete.LatestMessage.Data == 0 
             end
         end
@@ -57,6 +56,11 @@ classdef FetchRobotArm < handle
         function GripReleaseBlock(self, grip) % grip = true means grip, grip = false means open
             self.gripper = grip;
             send(self.gripper, self.gripperMsg);
+            
+            disp('Waiting for gripper to finish');
+            pause(0.5);
+            while self.motionComplete.LatestMessage.Data == 0 
+            end
         end
         
         %% Pick up block
@@ -79,9 +83,9 @@ classdef FetchRobotArm < handle
         end
         %% Return arm to Origin
         function MoveArmToOrigin(self)
-            origin.X_base = [0;0;0];
-            origin.quat = [0,0,0,0];
-            self.MoveRobotArm(origin);
+%             origin.X_base = [0;0;0];
+%             origin.quat = [0,0,0,0];
+%             self.MoveRobotArm(origin);
         end
     end
 end
