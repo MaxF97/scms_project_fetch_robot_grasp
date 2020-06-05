@@ -53,14 +53,19 @@ classdef FetchRobotArm < handle
             end
         end
         
+        %% Grip block
+        function GripReleaseBlock(self, grip) % grip = true means grip, grip = false means open
+            self.gripper = grip;
+            send(self.gripper, self.gripperMsg);
+        end
+        
         %% Pick up block
         function PickUpBlock(self, block)
             waypoint = block;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
-%             keyboard;
             self.MoveRobotArm(block);
-            % close gripper code goes here
+            self.GripReleaseBlock(self, true);
         end
         
         %% Place the block
@@ -70,7 +75,7 @@ classdef FetchRobotArm < handle
             self.MoveRobotArm(waypoint);
             keyboard;
             self.MoveRobotArm(pose);
-            % Open gripper code goes here
+            self.GripReleaseBlock(self, false);
         end
         %% Return arm to Origin
         function MoveArmToOrigin(self)
