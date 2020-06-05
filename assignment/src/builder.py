@@ -56,7 +56,7 @@ if __name__ == "__main__":
         if(counter == 5):
             print ("oh no")
             Arm.MoveToPose(0.35, 0.37, 0.3, Ros.a, Ros.b, Ros.c, Ros.d)
-            counter=+=1
+            counter+=1
             #Stop here to test Camera
             #Needs to go Down and then up again
         if(counter == 6):
