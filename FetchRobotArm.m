@@ -65,7 +65,7 @@ classdef FetchRobotArm < handle
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
             self.MoveRobotArm(block);
-            self.GripReleaseBlock(self, true);
+            self.GripReleaseBlock(true);
         end
         
         %% Place the block
@@ -75,7 +75,7 @@ classdef FetchRobotArm < handle
             self.MoveRobotArm(waypoint);
             keyboard;
             self.MoveRobotArm(pose);
-            self.GripReleaseBlock(self, false);
+            self.GripReleaseBlock(false);
         end
         %% Return arm to Origin
         function MoveArmToOrigin(self)
