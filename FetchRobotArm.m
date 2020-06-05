@@ -13,6 +13,7 @@ classdef FetchRobotArm < handle
         function self = FetchRobotArm()
             try rosinit; end
             self.PublishToMoveit();
+            self.PublishToGripper();
             self.SubscribeToMoveit();
         end
         
@@ -54,7 +55,7 @@ classdef FetchRobotArm < handle
         
         %% Grip block
         function GripReleaseBlock(self, grip) % grip = true means grip, grip = false means open
-            self.gripper = grip;
+            self.gripperMsg.Data = grip;
             send(self.gripper, self.gripperMsg);
             
             disp('Waiting for gripper to finish');
