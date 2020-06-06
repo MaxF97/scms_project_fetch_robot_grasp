@@ -6,6 +6,7 @@ from robot_arm import RobotArm
 from ROSInterface import ROSInterface
 from gripper import Gripper
 from headController import FetchHeadController
+from gripInterface import GripInterface
 counter = 0
 publisher_counter=0
 
@@ -15,6 +16,7 @@ if __name__ == "__main__":
     # Setup clients
     Ros = ROSInterface()
     Arm = RobotArm()
+    GripRos = GripInterface()
     GripHand = Gripper()
     HeadTilt = FetchHeadController()
     HeadTilt.look_at(1.23, 0, 0, "frame")
@@ -23,6 +25,7 @@ if __name__ == "__main__":
     while 1:
         try:
             Ros.Subscriber()
+            GripRos.GripSubscriber()
             break
         except:
             rospy.loginfo('waiting for matlab')
@@ -31,26 +34,35 @@ if __name__ == "__main__":
     
     while not rospy.is_shutdown():
         try:
-            Ros.Publisher()
-            print(publisher_counter)
+            Ros.PPublisher()
+            GripRos.GripPublisher()
+            print("Pub Counter is", publisher_counter)
             publisher_counter+=1
         except rospy.ROSInterruptException:
             pass
+
+        if(GripRos.grip_callback == 1):
+            print("Is Gripping. Also Grip State is")
+            #print(GripRos.grip_state)
+            gripcheckpass = GripRos.grip_state
+            GripHand.GripChoose(GripRos.grip_state)
+            GripRos.GetGripCheck(1)
+            GripRos.grip_callback = 0
+        else:
+            GripRos.GetGripCheck(0)
+
         if (Ros.callback == 1):
             Arm.MoveToPose(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
             if Arm.CheckGoal() == 1:
                 Ros.GetCheck(1)
                 Ros.callback = 0
-                grip_state = 1
                 counter+=1
                 print(counter)
             else:
                 Ros.GetCheck(0)
-        if(grip_state ==1 ):
-            GripHand.GripClose
-        if(grip_state ==2):
-            GripHand.GripOpen    
-        if(counter == 2):
+
+
+        """if(counter == 2):
             print("Close Grip")
             GripHand.GripClose()
             counter+=1
@@ -86,7 +98,7 @@ if __name__ == "__main__":
             Arm.OriginReturn()
             counter+=1
         if(counter == 7):
-            print("Can Detect Green Block??")
+            print("Can Detect Green Block??")"""
 
 
 

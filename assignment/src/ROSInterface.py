@@ -40,10 +40,9 @@ class ROSInterface:
     def Subscriber(self):
         rospy.Subscriber("Pose", PoseStamped, self.Callback)
         
-    def Publisher(self):
+    def PPublisher(self):
         self.pub.publish(self.check)
         self.rate.sleep()
 
     def GetCheck(self,check):
         self.check = check
-

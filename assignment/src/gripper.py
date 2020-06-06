@@ -29,12 +29,12 @@ class Gripper:
 
     def GripChoose(self, grip_goal):
         #Assume grip_goal == true to be close and false to be open
-        if (grip_goal == true):
+        if (grip_goal == True):
             effort_max = 150
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.max_effort = effort_max
             self._client.send_goal_and_wait(goal, rospy.Duration(1))
-        if(grip_goal == false):
+        if(grip_goal == False):
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.position = 0.10
             self._client.send_goal_and_wait(goal, rospy.Duration(10))
