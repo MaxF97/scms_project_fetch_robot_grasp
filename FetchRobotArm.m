@@ -6,6 +6,9 @@ classdef FetchRobotArm < handle
         
         gripper;
         gripperMsg;
+        
+        moveOrigin;
+        moveOriginMsg;
     end
     
     methods
@@ -15,24 +18,28 @@ classdef FetchRobotArm < handle
             self.PublishToMoveit();
             self.PublishToGripper();
             self.SubscribeToMoveit();
+            self.PublishToOrigin();
+            pause(1);
         end
         
         %% Set up Publish Pose to topic
         function PublishToMoveit(self)
             [self.pose, self.poseMsg] = rospublisher('Pose', 'geometry_msgs/PoseStamped');
-            pause(0.5);
         end
         
         %% Set up Subribe to see when movement is complete
         function SubscribeToMoveit(self)
             self.motionComplete = rossubscriber('Check', 'std_msgs/Bool');
-            pause(0.5);
         end
         
         %% Gripper Publisher
         function PublishToGripper(self)
-            [self.gripper, self.gripperMsg] = rospublisher('State', 'std_msgs/Bool'); %
-            %[self.changeState, self.changeStateMsg] = rospublisher('MoveToDesiredState', 'std_msgs/Bool');
+            [self.gripper, self.gripperMsg] = rospublisher('State', 'std_msgs/Bool');
+        end
+        
+        %% Move to Origin publisher
+        function PublishToOrigin(self)
+            [self.moveOrigin, self.moveOriginMsg] = rospublisher('MoveToOrigin', 'std_msgs/Bool'); 
         end
         
         %% Move Robot Arm to Pose
@@ -84,10 +91,14 @@ classdef FetchRobotArm < handle
         end
         %% Return arm to Origin
         function MoveArmToOrigin(self)
-%             origin.X_base = [0;0;0];
-%             origin.quat = [0,0,0,0];
-%             self.MoveRobotArm(origin);
+            self.moveOriginMsg.Data = true;
+            send(self.moveOrigin, self.moveOriginMsg);
+            
+            disp('Waiting fetch to move to origin');
+            while self.motionComplete.LatestMessage.Data == 0
+            end
+            self.moveOriginMsg.Data = false;
+            send(self.moveOrigin, self.moveOriginMsg);
         end
     end
 end
-
