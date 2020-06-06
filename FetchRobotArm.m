@@ -57,6 +57,7 @@ classdef FetchRobotArm < handle
             self.poseMsg.Pose.Orientation.Y = block.quat(2);
             self.poseMsg.Pose.Orientation.Z = block.quat(3);
             self.poseMsg.Pose.Orientation.W = block.quat(4);
+            pause(1);
             send(self.pose,self.poseMsg);
             
             disp('Waiting for motion to be complete');
@@ -68,6 +69,7 @@ classdef FetchRobotArm < handle
         %% Grip block
         function GripReleaseBlock(self, grip) % grip = true means grip, grip = false means open
             self.gripperMsg.Data = grip;
+            pause(1);
             send(self.gripper, self.gripperMsg);
             
             disp('Waiting for gripper to finish');
@@ -105,6 +107,9 @@ classdef FetchRobotArm < handle
             self.MoveRobotArm(goalPose);
             %keyboard;
             self.GripReleaseBlock(false);
+            
+            % Move just above placed block
+            self.MoveRobotArm(waypoint);
         end
         %% Return arm to Origin
         function MoveArmToOrigin(self)
