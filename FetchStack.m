@@ -11,7 +11,7 @@ sensorProcessing = ProcessCameraData();
 fetch = FetchRobotArm();
 
 % Move to origin
-% --------------INSERT MOVE TO ORIGIN HERE -----------%
+% -----------INSERT MOVE TO ORIGIN HERE -----------%
 
 %% Detect blue and red blocks
 disp('Detecting blue block')
@@ -23,30 +23,37 @@ sensorProcessing.DetectRedBlock(camera);
 if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
     % Pick up red block
     disp('Pick up red block')
-    fetch.PickUpBlock(sensorProcessing.redBlock);
-    goalDropOffPose = fetch.CalcPoseAboveBlock(sensorProcessing.blueBlock);
+    fetch.PickUpBlock(sensorProcessing.redBlock)
+    % Place red block
     disp('Place red block on blue block');
     fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
+    
+    % -----------INSERT MOVE TO ORIGIN HERE -----------%
+    
+    % Detect red block
+    disp('Detecting red block')
+    sensorProcessing.DetectRedBlock(camera);
+    if sensorProcessing.noRedBlock == true
+        disp('ERROR: Red block is was misplaced')
+    else
+        % Detect green block
+        disp('Detecting green block')
+        sensorProcessing.DetectGreenBlock(camera);
+        if sensorProcessing.noGreenBlock == false
+            % Pick up green block
+            disp('Pick up green block');
+            fetch.PickUpBlock(sensorProcessing.greenBlock);
+            % Place green block
+            disp('Place green block on red block');
+            fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
+        end
+            
+        % -----------INSERT MOVE TO ORIGIN HERE -----------%
+        
+    end
 else
     % right side of program flow chart
 end
-% disp('Detecting green block')
-% sensorProcessing.DetectGreenBlock(camera);
-
-%% Move to blue block
-% if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
-%     fetch.PickUpBlock(sensorProcessing.blueBlock);
-% else
-%     % Right side of program flow chart
-% end
-
-% greenWaypoint = sensorProcessing.greenBlock;
-% greenWaypoint.X_base(3) = greenWaypoint.X_base(3) + 0.16;
-% fetch.MoveRobotArm(greenWaypoint);
-% % keyboard;
-% fetch.MoveRobotArm(sensorProcessing.greenBlock);
-% disp('Picking Up Red Blcok');
-% fetch.PickUpBlock(sensorProcessing.redBlock);
 
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);
