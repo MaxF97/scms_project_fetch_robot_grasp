@@ -45,6 +45,8 @@ class RobotArm:
         pose = [0.0, 1.32, 0.7, 0.0, -2.0, 0.0, -0.57, 0.0]    
 
         self.moveGroup.moveToJointPosition(joints, pose, 0.02)
+        self.result = self.moveGroup.get_move_action().get_result()
+
     
     def CheckGoal(self):
         if self.result:

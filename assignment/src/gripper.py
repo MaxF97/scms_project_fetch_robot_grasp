@@ -13,7 +13,7 @@ class Gripper:
         #effort_max = 100
         self.grip_complete = 0
         self._client = actionlib.SimpleActionClient(ACTION_SERVER, control_msgs.msg.GripperCommandAction)
-        self._client.wait_for_server(rospy.Duration(10))
+        self._client.wait_for_server(rospy.Duration(4))
 
     def GripOpen(self):
         goal = control_msgs.msg.GripperCommandGoal()
