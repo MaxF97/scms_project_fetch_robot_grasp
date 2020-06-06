@@ -22,7 +22,7 @@ if __name__ == "__main__":
     GripHand = Gripper()
     HeadTilt = FetchHeadController()
     OriginROS = OriginInterface()
-    HeadTilt.look_at(1.23, 0, 0, "frame")
+    HeadTilt.look_at(0.7, 0, 0.7, "base_link")
     print("Yes I looked")
     temp_count = 0
     origin_counter = 0
@@ -42,7 +42,8 @@ if __name__ == "__main__":
             Ros.PPublisher()
             GripRos.GripPublisher()
             OriginROS.OriginPublisher()
-            print("Pub Counter is", publisher_counter)
+            #print("Pub Counter is", publisher_counter)
+            #print("Ros Callback is", Ros.callback)
             publisher_counter+=1
         except rospy.ROSInterruptException:
             pass
@@ -68,7 +69,7 @@ if __name__ == "__main__":
                 print(counter)
             else:
                 Ros.GetCheck(0)
-
+        """
         if (OriginROS.origin_callback == 1):
             if(origin_counter >=2):
                 print("Origin Return Process")
@@ -91,7 +92,7 @@ if __name__ == "__main__":
                 #temp_count = 0
             else:
                 origin_counter+=1
-
+        """
         """if(counter == 2):
             print("Close Grip")
             GripHand.GripClose()
@@ -130,9 +131,3 @@ if __name__ == "__main__":
         if(counter == 7):
             print("Can Detect Green Block??")"""
 
-
-
-
-
-
-        
