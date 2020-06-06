@@ -81,12 +81,24 @@ classdef FetchRobotArm < handle
         end
         
         %% Place the block
-        function PlaceTheBlock(self, pose)
-            waypoint = pose;
+        function PlaceGrippedBlockOn(self, grippedBlock, baseBlock)
+            % Create waypoint straight up from curent block
+            waypoint = grippedBlock;
+            waypoint.X_base(3) = grippedBlock.X_base(3) + 0.16;
+            keyboard;
+            self.MoveRobotArm(waypoint);
+            
+            % Create goal pose just above block
+            goalPose = self.CalcPoseAboveBlock(baseBlock);
+            % Create waypoint just above goal pose
+            waypoint = goalPose;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
+            
+            keyboard;
             self.MoveRobotArm(waypoint);
             keyboard;
-            self.MoveRobotArm(pose);
+            self.MoveRobotArm(goalPose);
+            keyboard;
             self.GripReleaseBlock(false);
         end
         %% Return arm to Origin
@@ -99,6 +111,12 @@ classdef FetchRobotArm < handle
             end
             self.moveOriginMsg.Data = false;
             send(self.moveOrigin, self.moveOriginMsg);
+        end
+        
+        %% Calculate point to place block above 
+        function dropOffPose = CalcPoseAboveBlock(self, baseBlock)
+            dropOffPose = baseBlock;
+            dropOffPose.X_base(3) = dropOffPose.X_base(3) + 0.07;
         end
     end
 end

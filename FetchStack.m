@@ -1,8 +1,6 @@
 clear all 
 close all
 
-% Create an origin point to move arm too after placing
-
 %% Create objects of relevant classes
 disp('Creating objects to subscribe and publish to fetch robot')
 % Create camera object
@@ -12,12 +10,26 @@ sensorProcessing = ProcessCameraData();
 % Create object for moving robot
 fetch = FetchRobotArm();
 
+% Move to origin
+% --------------INSERT MOVE TO ORIGIN HERE -----------%
 
-% Detect blue and red block
-% disp('Detecting blue block')
-% sensorProcessing.DetectBlueBlock(camera);
+%% Detect blue and red blocks
+disp('Detecting blue block')
+sensorProcessing.DetectBlueBlock(camera);
 disp('Detecting red block')
 sensorProcessing.DetectRedBlock(camera);
+
+%% Move to pick up block logic
+if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
+    % Pick up red block
+    disp('Pick up red block')
+    fetch.PickUpBlock(sensorProcessing.redBlock);
+    goalDropOffPose = fetch.CalcPoseAboveBlock(sensorProcessing.blueBlock);
+    disp('Place red block on blue block');
+    fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
+else
+    % right side of program flow chart
+end
 % disp('Detecting green block')
 % sensorProcessing.DetectGreenBlock(camera);
 
@@ -33,8 +45,8 @@ sensorProcessing.DetectRedBlock(camera);
 % fetch.MoveRobotArm(greenWaypoint);
 % % keyboard;
 % fetch.MoveRobotArm(sensorProcessing.greenBlock);
-disp('Picking Up Red Blcok');
-fetch.PickUpBlock(sensorProcessing.redBlock);
+% disp('Picking Up Red Blcok');
+% fetch.PickUpBlock(sensorProcessing.redBlock);
 
 %% Leave temporarily for plotting image Data (let Max remove when ready)
 % imshow(camera.rgbImg);
@@ -56,8 +68,3 @@ fetch.PickUpBlock(sensorProcessing.redBlock);
 % figure(3)
 % imshow(camera.depthImg)
 
-%% program structure
-% class for subscribing to camera (ROS)
-% class for processing camera data to give object position (PROGRAM)
-% class for controlling robot (PROGRAM)
-% class for publishing to robot arm (ROS)
