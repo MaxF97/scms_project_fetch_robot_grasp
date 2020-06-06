@@ -90,7 +90,7 @@ classdef FetchRobotArm < handle
             % Create waypoint straight up from curent block
             waypoint = grippedBlock;
             waypoint.X_base(3) = grippedBlock.X_base(3) + 0.16;
-            keyboard;
+            %keyboard;
             self.MoveRobotArm(waypoint);
             
             % Create goal pose just above block
@@ -99,11 +99,11 @@ classdef FetchRobotArm < handle
             waypoint = goalPose;
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             
-            keyboard;
+            %keyboard;
             self.MoveRobotArm(waypoint);
-            keyboard;
+            %keyboard;
             self.MoveRobotArm(goalPose);
-            keyboard;
+            %keyboard;
             self.GripReleaseBlock(false);
         end
         %% Return arm to Origin
