@@ -11,6 +11,7 @@ class Gripper:
     def __init__(self):
         #effort_min = 30
         #effort_max = 100
+        self.grip_complete = 0
         self._client = actionlib.SimpleActionClient(ACTION_SERVER, control_msgs.msg.GripperCommandAction)
         self._client.wait_for_server(rospy.Duration(10))
 
@@ -33,10 +34,13 @@ class Gripper:
             effort_max = 150
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.max_effort = effort_max
-            self._client.send_goal_and_wait(goal, rospy.Duration(1))
+            self._client.send_goal_and_wait(goal, rospy.Duration(3))
+            self.grip_complete =1
         if(grip_goal == False):
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.position = 0.10
-            self._client.send_goal_and_wait(goal, rospy.Duration(10))
+            self._client.send_goal_and_wait(goal, rospy.Duration(3))
+            self.grip_complete=1
+
 
     

@@ -1,12 +1,14 @@
 #!/usr/bin/env python 
 
 import rospy
+import time
 
 from robot_arm import RobotArm
 from ROSInterface import ROSInterface
 from gripper import Gripper
 from headController import FetchHeadController
 from gripInterface import GripInterface
+from originInterface import OriginInterface
 counter = 0
 publisher_counter=0
 
@@ -19,13 +21,16 @@ if __name__ == "__main__":
     GripRos = GripInterface()
     GripHand = Gripper()
     HeadTilt = FetchHeadController()
+    OriginROS = OriginInterface()
     HeadTilt.look_at(1.23, 0, 0, "frame")
     print("Yes I looked")
-    grip_state = 0
+    temp_count = 0
+    origin_counter = 0
     while 1:
         try:
             Ros.Subscriber()
             GripRos.GripSubscriber()
+            OriginROS.OriginSubscriber()
             break
         except:
             rospy.loginfo('waiting for matlab')
@@ -36,6 +41,7 @@ if __name__ == "__main__":
         try:
             Ros.PPublisher()
             GripRos.GripPublisher()
+            OriginROS.OriginPublisher()
             print("Pub Counter is", publisher_counter)
             publisher_counter+=1
         except rospy.ROSInterruptException:
@@ -44,12 +50,14 @@ if __name__ == "__main__":
         if(GripRos.grip_callback == 1):
             print("Is Gripping. Also Grip State is")
             #print(GripRos.grip_state)
-            gripcheckpass = GripRos.grip_state
+            #Potentially include CheckGoal for Gripper using stalled value for gripper
             GripHand.GripChoose(GripRos.grip_state)
-            GripRos.GetGripCheck(1)
-            GripRos.grip_callback = 0
-        else:
-            GripRos.GetGripCheck(0)
+            if (GripHand.grip_complete==1):
+                GripRos.GetGripCheck(1)
+                GripRos.grip_callback = 0
+                GripHand.grip_complete = 0
+            else:
+                GripRos.GetGripCheck(0)
 
         if (Ros.callback == 1):
             Arm.MoveToPose(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
@@ -61,6 +69,28 @@ if __name__ == "__main__":
             else:
                 Ros.GetCheck(0)
 
+        if (OriginROS.origin_callback == 1):
+            if(origin_counter >=2):
+                print("Origin Return Process")
+                #Yet to finish
+                #if(temp_count ==2):
+                print("Begin Origin Return Process")
+                print("Move Up Slightly")
+                Arm.MoveToPose(Ros.x, Ros.y, (Ros.z+0.2), Ros.a, Ros.b, Ros.c, Ros.d)
+                print("Move to Side to Avoid Collision")
+                Arm.MoveToPose(0.35, 0.37, (0.2+Ros.z), Ros.a, Ros.b, Ros.c, Ros.d)
+                print("Move Down Slightly")
+                Arm.MoveToPose(0.35, 0.37, (1), Ros.a, Ros.b, Ros.c, Ros.d)
+                print("Return to Origin Pose")
+                time.sleep(1)
+                Arm.OriginReturn()
+                time.sleep(1)
+                OriginROS.OriginCheck(1)
+                OriginROS.origin_callback = 0   
+                origin_counter = 0
+                #temp_count = 0
+            else:
+                origin_counter+=1
 
         """if(counter == 2):
             print("Close Grip")

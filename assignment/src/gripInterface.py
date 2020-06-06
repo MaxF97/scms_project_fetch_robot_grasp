@@ -17,7 +17,7 @@ class GripInterface:
         #Publisher
         self.grip_pub = rospy.Publisher('GripCheck', Bool, queue_size=10)
         self.rate = rospy.Rate(10)
-        
+
     def GripCallback(self,data):
         self.grip_state = data.data
         self.grip_callback = 1
@@ -28,8 +28,6 @@ class GripInterface:
         rospy.Subscriber("State",Bool, self.GripCallback)
 
     def GripPublisher(self):
-
-
         self.grip_pub.publish(self.grip_check)
         self.rate.sleep()
 

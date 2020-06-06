@@ -4,6 +4,9 @@ classdef FetchRobotArm < handle
         poseMsg;
         motionComplete;
         
+        gripComplete;
+        originComplete
+        
         gripper;
         gripperMsg;
         
@@ -30,6 +33,8 @@ classdef FetchRobotArm < handle
         %% Set up Subribe to see when movement is complete
         function SubscribeToMoveit(self)
             self.motionComplete = rossubscriber('Check', 'std_msgs/Bool');
+            self.gripComplete = rossubscriber('GripCheck', 'std_msgs/Bool');
+            self.originComplete = rossubscriber('OriginCheck', 'std_msgs/Bool');
         end
         
         %% Gripper Publisher
@@ -67,7 +72,7 @@ classdef FetchRobotArm < handle
             
             disp('Waiting for gripper to finish');
             pause(0.5);
-            while self.motionComplete.LatestMessage.Data == 0 
+            while self.gripComplete.LatestMessage.Data == 0 
             end
         end
         
@@ -107,7 +112,7 @@ classdef FetchRobotArm < handle
             send(self.moveOrigin, self.moveOriginMsg);
             
             disp('Waiting fetch to move to origin');
-            while self.motionComplete.LatestMessage.Data == 0
+            while self.originComplete.LatestMessage.Data == 0
             end
             self.moveOriginMsg.Data = false;
             send(self.moveOrigin, self.moveOriginMsg);
