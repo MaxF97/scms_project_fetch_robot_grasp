@@ -51,16 +51,16 @@ Program Code Contributions:
 
 
 
-|    |Dinh Dang Khoa Le | Max Farmer | Samuel Gallagher | 
-| Environmental Setup and Configuration | 0% | 0% | 100% |
-|Sense Blocks position & Orientation | 0%| 100% | 0%|
-|Matlab ROS Publishing and Subscribing | 20% | 60% | 20%|
-|Python ROS Publishing and Subscribing|80%|0%|20%|
-|Arm Movement|75%|5%(from Matlab)|20%|
-|Arm Gripping| 5%| 5%(from Matlab)|90%|
-|Program Logic | 10%|70%|20%|
-Program Testing|33.3%|33.3%|33.3%|
-|Video Filing|50%|0%|50%|
-|Video Editing|5%|90%|5%|
-|Overall Contributions|33.3%|33.3%|33.3%|
+|Contributions                          |Dinh Dang Khoa Le |MaxFarmer | Samuel Gallagher | 
+|Environmental Setup and Configuration  |0%                |0%        |100%              |
+|Sense Blocks position & Orientation    |0%                |100%      |0%                |
+|Matlab ROS Publishing and Subscribing  |20%               |60%       |20%               |    
+|Python ROS Publishing and Subscribing  |80%               |0%        |20%               |
+|Arm Movement                           |75%               |5%(Matlab)|20%               |
+|Arm Gripping                           |5%                |5%(Matlab)|90%               |
+|Program Logic                          |10%               |70%       |20%               |
+|Program Testing                        |33.3%             |33.3%     |33.3%             |
+|Video Filing                           |50%               |0%        |50%               |
+|Video Editing                          |5%                |90%       |5%                | 
+|Overall Contributions                  |33.3%             |33.3%     |33.3%             |
 
