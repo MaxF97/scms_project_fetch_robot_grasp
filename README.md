@@ -73,3 +73,5 @@ This video demonstrates what we achieved. It shows the robot sensing each block,
 
 # Program Flow:
 
+![Operation_Flow-image](https://user-images.githubusercontent.com/43405112/83962201-d7814200-a8de-11ea-92e2-6610aa5a2389.png)
+
