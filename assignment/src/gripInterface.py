@@ -19,8 +19,12 @@ class GripInterface:
         self.rate = rospy.Rate(10)
 
     def GripCallback(self,data):
+        self.GetGripCheck(0)
+        self.GripPublisher()
+        
         self.grip_state = data.data
         self.grip_callback = 1
+
         rospy.loginfo(rospy.get_caller_id() + "%r",self.grip_state)
 
 

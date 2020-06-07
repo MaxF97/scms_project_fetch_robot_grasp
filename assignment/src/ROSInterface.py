@@ -26,6 +26,8 @@ class ROSInterface:
         self.rate = rospy.Rate(10) # 10hz
 
     def Callback(self,data):
+        self.GetCheck(0)
+        self.PPublisher()
         self.x = data.pose.position.x
         self.y = data.pose.position.y
         self.z = data.pose.position.z
