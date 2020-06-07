@@ -57,13 +57,15 @@ classdef FetchRobotArm < handle
             self.poseMsg.Pose.Orientation.Y = block.quat(2);
             self.poseMsg.Pose.Orientation.Z = block.quat(3);
             self.poseMsg.Pose.Orientation.W = block.quat(4);
-            pause(1);
+            pause(1.0);
+            
             send(self.pose,self.poseMsg);
             
             disp('Waiting for motion to be complete');
             pause(0.5);
             while self.motionComplete.LatestMessage.Data == 0 
             end
+            pause(1.0);
         end
         
         %% Grip block
@@ -84,7 +86,7 @@ classdef FetchRobotArm < handle
             waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
             self.MoveRobotArm(waypoint);
             self.MoveRobotArm(block);
-            self.GripReleaseBlock(true);
+            %self.GripReleaseBlock(true);
         end
         
         %% Place the block
@@ -106,7 +108,7 @@ classdef FetchRobotArm < handle
             %keyboard;
             self.MoveRobotArm(goalPose);
             %keyboard;
-            self.GripReleaseBlock(false);
+            %self.GripReleaseBlock(false);
             
             % Move just above placed block
             self.MoveRobotArm(waypoint);

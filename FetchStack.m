@@ -31,13 +31,13 @@ disp('Place red block on blue block');
 fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
 
 %pick up green block
-disp('Pick up green block');
-fetch.PickUpBlock(sensorProcessing.greenBlock);
+%disp('Pick up green block');
+%fetch.PickUpBlock(sensorProcessing.greenBlock);
 % Place green block
-disp('Place green block on red block');
-finalStack = sensorProcessing.blueBlock;
-finalStack.X_base(3) = finalStack.X_base(3)+0.14;
-fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
+%disp('Place green block on red block');
+%finalStack = sensorProcessing.blueBlock;
+%finalStack.X_base(3) = finalStack.X_base(3)+0.1;
+%fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
 
 
 keyboard;

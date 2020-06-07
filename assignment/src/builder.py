@@ -29,8 +29,7 @@ if __name__ == "__main__":
     while 1:
         try:
             Ros.Subscriber()
-            GripRos.GripSubscriber()
-            OriginROS.OriginSubscriber()
+            #GripRos.GripSubscriber()
             break
         except:
             rospy.loginfo('waiting for matlab')
@@ -40,14 +39,17 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         try:
             Ros.PPublisher()
-            GripRos.GripPublisher()
-            OriginROS.OriginPublisher()
+            Ros.GetCheck(0)
+            Ros.PPublisher()
+            #GripRos.GripPublisher()
             #print("Pub Counter is", publisher_counter)
             #print("Ros Callback is", Ros.callback)
             publisher_counter+=1
         except rospy.ROSInterruptException:
             pass
 
+
+        """
         if(GripRos.grip_callback == 1):
             print("Is Gripping. Also Grip State is")
             #print(GripRos.grip_state)
@@ -59,16 +61,22 @@ if __name__ == "__main__":
                 GripHand.grip_complete = 0
             else:
                 GripRos.GetGripCheck(0)
-
+        """
+        
         if (Ros.callback == 1):
+            print("Arm willl move")
             Arm.MoveToPose(Ros.x, Ros.y, Ros.z, Ros.a, Ros.b, Ros.c, Ros.d)
+            print("Arm has moved")
             if Arm.CheckGoal() == 1:
+                print("Check Goal was 1")
                 Ros.GetCheck(1)
                 Ros.callback = 0
-                counter+=1
-                print(counter)
+                #counter+=1
+                #print(counter)
             else:
                 Ros.GetCheck(0)
+                print(" check goal was not 1")
+
         """
         if (OriginROS.origin_callback == 1):
             if(origin_counter >=2):
