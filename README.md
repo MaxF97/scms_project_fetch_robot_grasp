@@ -67,6 +67,6 @@ Program & Video Code Contributions:
 
 
 
-Video Description:
+# Video Description:
 This video demonstrates what we achieved. It shows the robot sensing and moving the arm to pick up and stack the blocks. The blue block on the bottom, then red, then green.
 
