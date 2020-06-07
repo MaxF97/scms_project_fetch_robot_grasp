@@ -52,6 +52,7 @@ Program Code Contributions:
 
 
 |Contributions                          |Dinh Dang Khoa Le |MaxFarmer | Samuel Gallagher | 
+|---------------------------------------|------------------|----------|------------------|
 |Environmental Setup and Configuration  |0%                |0%        |100%              |
 |Sense Blocks position & Orientation    |0%                |100%      |0%                |
 |Matlab ROS Publishing and Subscribing  |20%               |60%       |20%               |    
