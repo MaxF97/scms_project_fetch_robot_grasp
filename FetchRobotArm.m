@@ -91,36 +91,21 @@ classdef FetchRobotArm < handle
         function PlaceGrippedBlockOn(self, grippedBlock, baseBlock)
             % Create waypoint straight up from curent block
             waypoint = grippedBlock;
-            waypoint.X_base(3) = grippedBlock.X_base(3) + 0.16;
-            %keyboard;
+            waypoint.X_base(3) = grippedBlock.X_base(3) + 0.13;
             self.MoveRobotArm(waypoint);
             
             % Create goal pose just above block
             goalPose = self.CalcPoseAboveBlock(baseBlock);
             % Create waypoint just above goal pose
             waypoint = goalPose;
-            waypoint.X_base(3) = waypoint.X_base(3) + 0.16;
+            waypoint.X_base(3) = waypoint.X_base(3) + 0.13;
             
-            %keyboard;
             self.MoveRobotArm(waypoint);
-            %keyboard;
             self.MoveRobotArm(goalPose);
-            %keyboard;
             self.GripReleaseBlock(false);
             
             % Move just above placed block
             self.MoveRobotArm(waypoint);
-        end
-        %% Return arm to Origin
-        function MoveArmToOrigin(self)
-            self.moveOriginMsg.Data = true;
-            send(self.moveOrigin, self.moveOriginMsg);
-            
-            disp('Waiting fetch to move to origin');
-            while self.originComplete.LatestMessage.Data == 0
-            end
-            self.moveOriginMsg.Data = false;
-            send(self.moveOrigin, self.moveOriginMsg);
         end
         
         %% Calculate point to place block above 

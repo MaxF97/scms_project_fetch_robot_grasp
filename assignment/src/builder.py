@@ -9,8 +9,6 @@ from gripper import Gripper
 from headController import FetchHeadController
 from gripInterface import GripInterface
 from originInterface import OriginInterface
-counter = 0
-publisher_counter=0
 
 
 
@@ -32,7 +30,6 @@ if __name__ == "__main__":
             break
         except:
             rospy.loginfo('waiting for matlab')
-            print(counter)
 
     
     while not rospy.is_shutdown():
