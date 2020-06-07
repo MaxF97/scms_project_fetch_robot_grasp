@@ -47,7 +47,7 @@ The folder in this repository called 'assignment' must be saved in the following
 4.4.  Start the program by running the MATLAB script 'FetchStack.m'
 
 
-Program & Video Code Contributions:
+# Program & Video Code Contributions:
 
 
 
@@ -68,5 +68,8 @@ Program & Video Code Contributions:
 
 
 # Video Description:
-This video demonstrates what we achieved. It shows the robot sensing and moving the arm to pick up and stack the blocks. The blue block on the bottom, then red, then green.
+This video demonstrates what we achieved. It shows the robot sensing each block, then moving the arm to pick up and stack the blocks. The blue block on the bottom, then red, then green.
+
+
+# Program Flow:
 
