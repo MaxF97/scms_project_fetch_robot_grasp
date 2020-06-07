@@ -1,5 +1,7 @@
+rosshutdown
 clear all 
 close all
+clc
 
 %% Create objects of relevant classes
 disp('Creating objects to subscribe and publish to fetch robot')
@@ -39,9 +41,6 @@ finalStack = sensorProcessing.blueBlock;
 finalStack.X_base(3) = finalStack.X_base(3)+0.14;
 fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
 
-
-keyboard;
-pause(20);
 %% Detect blue and red blocks
 disp('Detecting blue block')
 sensorProcessing.DetectBlueBlock(camera);
