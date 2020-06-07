@@ -71,7 +71,10 @@ The folder in this repository called 'assignment' must be saved in the following
 This video demonstrates what we achieved. It shows the robot sensing each block, then moving the arm to pick up and stack the blocks. The blue block on the bottom, then red, then green.
 
 
-# Program Flow:
+# Operation Program Flow:
 
 ![Operation_Flow-image](https://user-images.githubusercontent.com/43405112/83962201-d7814200-a8de-11ea-92e2-6610aa5a2389.png)
 
+# Class Program Flow:
+
+![Class_Flow](https://user-images.githubusercontent.com/43405112/83962236-1fa06480-a8df-11ea-8db3-f0adf3609227.png)
