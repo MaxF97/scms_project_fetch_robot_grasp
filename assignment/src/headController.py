@@ -4,8 +4,6 @@ import actionlib
 import rospy
 
 from control_msgs.msg import PointHeadAction, PointHeadGoal
-#from geometry_msgs import PointHeadGoal
-from geometry_msgs.msg import PointStamped
 
 # Point the head using controller
 class FetchHeadController(object):
@@ -16,26 +14,12 @@ class FetchHeadController(object):
         self.client.wait_for_server()
 
     def look_at(self, x, y, z, frame, duration=1.0):
-        #The goal message will be sending
         goal = PointHeadGoal()
-        point = PointStamped()
-        #The target point, expressed in the requested frame
-        point.header.frame_id = frame
-        point.point.x = x
-        point.point.y = y
-        point.point.z = z
-        goal.target = point
-        #We are pointing the high-def camera frame to default X-axis
-        goal.pointing_frame = "base_link"
-        goal.pointing_axis.x = 1
-        goal.pointing_axis.y = 0
-        goal.pointing_axis.z = 0
-
-        #Take at least 0.5 seconds to get there
-        goal.min_duration = rospy.Duration(0.5)
-        #Go no faster than 1 rad/s
-        goal.max_velocity = 1.0
-
-        #send the goal
-        self.client.send_goal_and_wait(goal, rospy.Duration(3))
-        #self.client.wait_for_result()
+        goal.target.header.stamp = rospy.Time.now()
+        goal.target.header.frame_id = "frame"
+        goal.target.point.x = x
+        goal.target.point.y = y
+        goal.target.point.z = z
+        goal.min_duration = rospy.Duration(duration)
+        self.client.send_goal(goal)
+        self.client.wait_for_result()

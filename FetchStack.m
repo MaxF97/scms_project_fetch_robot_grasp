@@ -1,7 +1,5 @@
-rosshutdown
 clear all 
 close all
-clc
 
 %% Create objects of relevant classes
 disp('Creating objects to subscribe and publish to fetch robot')
@@ -18,29 +16,27 @@ fetch = FetchRobotArm();
 
 %% For testing without moving to origin (uncomment below to test out sample (no move to origin)
 
-disp('Detecting blue block')
-sensorProcessing.DetectBlueBlock(camera);
-disp('Detecting red block')
-sensorProcessing.DetectRedBlock(camera);
-disp('Detecting green block')
-sensorProcessing.DetectGreenBlock(camera);
-
-% Pick up red block
-disp('Pick up red block')
-fetch.PickUpBlock(sensorProcessing.redBlock)
-% Place red block
-disp('Place red block on blue block');
-fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
-
-%pick up green block
-disp('Pick up green block');
-fetch.PickUpBlock(sensorProcessing.greenBlock);
-% Place green block
-disp('Place green block on red block');
-finalStack = sensorProcessing.blueBlock;
-finalStack.X_base(3) = finalStack.X_base(3)+0.14;
-fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
-
+% disp('Detecting blue block')
+% sensorProcessing.DetectBlueBlock(camera);
+% disp('Detecting red block')
+% sensorProcessing.DetectRedBlock(camera);
+% disp('Detecting green block')
+% sensorProcessing.DetectGreenBlock(camera);
+% 
+% % Pick up red block
+% disp('Pick up red block')
+% fetch.PickUpBlock(sensorProcessing.redBlock)
+% % Place red block
+% disp('Place red block on blue block');
+% fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
+% 
+% %pick up green block
+% disp('Pick up green block');
+% fetch.PickUpBlock(sensorProcessing.greenBlock);
+% % Place green block
+% disp('Place green block on red block');
+% fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
+% keyboard;
 %% Detect blue and red blocks
 disp('Detecting blue block')
 sensorProcessing.DetectBlueBlock(camera);

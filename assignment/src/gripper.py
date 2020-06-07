@@ -5,7 +5,6 @@ import actionlib
 import control_msgs.msg
 import sys
 import time
-from moveit_msgs.msg import MoveItErrorCodes
 
 ACTION_SERVER = 'gripper_controller/gripper_action'
 class Gripper:
@@ -14,7 +13,7 @@ class Gripper:
         #effort_max = 100
         self.grip_complete = 0
         self._client = actionlib.SimpleActionClient(ACTION_SERVER, control_msgs.msg.GripperCommandAction)
-        self._client.wait_for_server()
+        self._client.wait_for_server(rospy.Duration(10))
 
     def GripOpen(self):
         goal = control_msgs.msg.GripperCommandGoal()
@@ -35,18 +34,13 @@ class Gripper:
             effort_max = 150
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.max_effort = effort_max
-            self._client.send_goal(goal)
-            self._client.wait_for_result()
-            self.result = self._client.get_result()
-
+            self._client.send_goal_and_wait(goal, rospy.Duration(3))
+            self.grip_complete =1
         if(grip_goal == False):
             goal = control_msgs.msg.GripperCommandGoal()
             goal.command.position = 0.10
-            self._client.send_goal(goal)
-            self._client.wait_for_result()
-            self.result = self._client.get_result()
-
-
+            self._client.send_goal_and_wait(goal, rospy.Duration(3))
+            self.grip_complete=1
 
 
     
