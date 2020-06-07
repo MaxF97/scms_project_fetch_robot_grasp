@@ -10,12 +10,7 @@ sensorProcessing = ProcessCameraData();
 % Create object for moving robot
 fetch = FetchRobotArm();
 
-
-% Move to origin
-% -----------INSERT MOVE TO ORIGIN HERE -----------%
-
-%% For testing without moving to origin (uncomment below to test out sample (no move to origin)
-
+%% Detect Blocks location
 disp('Detecting blue block')
 sensorProcessing.DetectBlueBlock(camera);
 disp('Detecting red block')
@@ -23,32 +18,8 @@ sensorProcessing.DetectRedBlock(camera);
 disp('Detecting green block')
 sensorProcessing.DetectGreenBlock(camera);
 
-% Pick up red block
-disp('Pick up red block')
-fetch.PickUpBlock(sensorProcessing.redBlock)
-% Place red block
-disp('Place red block on blue block');
-fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
-
-%pick up green block
-disp('Pick up green block');
-fetch.PickUpBlock(sensorProcessing.greenBlock);
-% Place green block
-disp('Place green block on red block');
-finalStack = sensorProcessing.blueBlock;
-finalStack.X_base(3) = finalStack.X_base(3)+0.14;
-fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
-
-
-keyboard;
-pause(20);
-%% Detect blue and red blocks
-disp('Detecting blue block')
-sensorProcessing.DetectBlueBlock(camera);
-disp('Detecting red block')
-sensorProcessing.DetectRedBlock(camera);
-
-%% Move to pick up block logic
+%% Logic pending on what blocks are present
+% blue and red block present
 if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
     % Pick up red block
     disp('Pick up red block')
@@ -56,114 +27,159 @@ if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
     % Place red block
     disp('Place red block on blue block');
     fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
-    
-    % -----------INSERT MOVE TO ORIGIN HERE -----------%
-    
-    % Detect red block
-    disp('Detecting red block')
-    sensorProcessing.DetectRedBlock(camera);
-    if sensorProcessing.noRedBlock == true
-        disp('ERROR: Red block is was misplaced')
+    % green block present
+    if sensorProcessing.noGreenBlock == false
+        %pick up green block
+        disp('Pick up green block');
+        fetch.PickUpBlock(sensorProcessing.greenBlock);
+        % Place green block
+        disp('Place green block on red block');
+        finalStack = sensorProcessing.blueBlock;
+        finalStack.X_base(3) = finalStack.X_base(3)+0.14;
+        fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, finalStack);
+        disp('Stacking complete');
+    % no green block
     else
-        % Detect green block
-        disp('Detecting green block')
-        sensorProcessing.DetectGreenBlock(camera);
-        if sensorProcessing.noGreenBlock == false
-            % Pick up green block
-            disp('Pick up green block');
-            fetch.PickUpBlock(sensorProcessing.greenBlock);
-            % Place green block
-            disp('Place green block on red block');
-            fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
-        else
-            disp('Green block is not on table')
-        end
+        disp('Green block is missing')
     end
 else
-    % Detect green block
-    disp('Detecting green block')
-    sensorProcessing.DetectGreenBlock(camera);
-    
-    % Blue block is on the table
-    if sensorProcessing.noRedBlock == true && sensorProcessing.noBlueBlock == false
-        disp('Red block is not on table')
-        if sensorProcessing.noGreenBlock == false
-            % Pick up green block
+    % blue block is present, red block is missing
+    if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == true
+        if sensorProcessing.noGreenBlock = true
+            disp('Only blue block is on table')
+        else
             disp('Pick up green block');
             fetch.PickUpBlock(sensorProcessing.greenBlock);
             % Place green block
             disp('Place green block on blue block');
             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.blueBlock);
-        else 
-            disp('Green block is not on table');
-             % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
-            centre.X_base = [0;0;0]; 
-            centre.quat = [sqrt(2),0,-sqrt(2),0];
-            fetch.PlaceGrippedBlockOn(sensorProcessing.blueBlock, centre);
+            disp('Stacking complete');
         end
         
-    % Red block is on the table
+    % blue block is missing, red block is present
     elseif sensorProcessing.noBlueBlock == true && sensorProcessing.noRedBlock == false
-        disp('Blue block is not on table')
-        if sensorProcessing.noGreenBlock == false
-            % Pick up green block
-            disp('Pick up green block');
+        if sensorProcessing.noGreenBlock = true
+            disp('Only red block is on table')
+        else
+             disp('Pick up green block');
             fetch.PickUpBlock(sensorProcessing.greenBlock);
             % Place green block
             disp('Place green block on red block');
             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
-        else
-            disp('Green block is not on table')
-             % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
-            centre.X_base = [0;0;0]; 
-            centre.quat = [sqrt(2),0,-sqrt(2),0];
-            fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, centre);
+            disp('Stacking complete');
         end
-    % neither red or blue block is on the table
+    % blue and red blocks are missing
     else
-        disp('Blue block is not on table')
-        disp('Red block is not on table')
-        if sensorProcessing.noGreenBlock == false
-            % Pick up green block
-            disp('Pick up green block');
-            fetch.PickUpBlock(sensorProcessing.greenBlock);
-            % Place green block
-            disp('Place green block near middle block');
-            
-            
-            
-            % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
-            centre.X_base = [0;0;0]; 
-            centre.quat = [sqrt(2),0,-sqrt(2),0];
-            fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, centre);
-            
-            
+        if sensorProcessing.noGreenBlock = true
+            disp('No blocks on table')
         else
-            disp('Green block is not on table')
+            disp('Only green block is on table');
         end
     end
     
-    % -----------INSERT MOVE TO ORIGIN HERE -----------%
-    
 end
 
-%% Leave temporarily for plotting image Data (let Max remove when ready)
-% imshow(camera.rgbImg);
-%             kern = [0, 1, 0;
-%                 1, -4, 1;
-%                 0, 1, 0];
-%            cameraImage = uint8(conv2(camera.grayImg, kern, 'same'));
-% imshow(cameraImage);
-% imwrite(cameraImage, 'block.jpg');
-
-% hold on
-% plot(sensorProcessing.blockCornerPoints);
-
-
-% figure(1)
-% imshow(camera.rgbImg);
-% figure(2)
-% imshow(camera.grayImg);
-% figure(3)
-% imshow(camera.depthImg)
-
+% %% Detect blue and red blocks
+% disp('Detecting blue block')
+% sensorProcessing.DetectBlueBlock(camera);
+% disp('Detecting red block')
+% sensorProcessing.DetectRedBlock(camera);
+% 
+% %% Move to pick up block logic
+% if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
+%     % Pick up red block
+%     disp('Pick up red block')
+%     fetch.PickUpBlock(sensorProcessing.redBlock)
+%     % Place red block
+%     disp('Place red block on blue block');
+%     fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, sensorProcessing.blueBlock);
+%     
+%     % -----------INSERT MOVE TO ORIGIN HERE -----------%
+%     
+%     % Detect red block
+%     disp('Detecting red block')
+%     sensorProcessing.DetectRedBlock(camera);
+%     if sensorProcessing.noRedBlock == true
+%         disp('ERROR: Red block is was misplaced')
+%     else
+%         % Detect green block
+%         disp('Detecting green block')
+%         sensorProcessing.DetectGreenBlock(camera);
+%         if sensorProcessing.noGreenBlock == false
+%             % Pick up green block
+%             disp('Pick up green block');
+%             fetch.PickUpBlock(sensorProcessing.greenBlock);
+%             % Place green block
+%             disp('Place green block on red block');
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
+%         else
+%             disp('Green block is not on table')
+%         end
+%     end
+% else
+%     % Detect green block
+%     disp('Detecting green block')
+%     sensorProcessing.DetectGreenBlock(camera);
+%     
+%     % Blue block is on the table
+%     if sensorProcessing.noRedBlock == true && sensorProcessing.noBlueBlock == false
+%         disp('Red block is not on table')
+%         if sensorProcessing.noGreenBlock == false
+%             % Pick up green block
+%             disp('Pick up green block');
+%             fetch.PickUpBlock(sensorProcessing.greenBlock);
+%             % Place green block
+%             disp('Place green block on blue block');
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.blueBlock);
+%         else 
+%             disp('Green block is not on table');
+%              % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
+%             centre.X_base = [0;0;0]; 
+%             centre.quat = [sqrt(2),0,-sqrt(2),0];
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.blueBlock, centre);
+%         end
+%         
+%     % Red block is on the table
+%     elseif sensorProcessing.noBlueBlock == true && sensorProcessing.noRedBlock == false
+%         disp('Blue block is not on table')
+%         if sensorProcessing.noGreenBlock == false
+%             % Pick up green block
+%             disp('Pick up green block');
+%             fetch.PickUpBlock(sensorProcessing.greenBlock);
+%             % Place green block
+%             disp('Place green block on red block');
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, sensorProcessing.redBlock);
+%         else
+%             disp('Green block is not on table')
+%              % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
+%             centre.X_base = [0;0;0]; 
+%             centre.quat = [sqrt(2),0,-sqrt(2),0];
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.redBlock, centre);
+%         end
+%     % neither red or blue block is on the table
+%     else
+%         disp('Blue block is not on table')
+%         disp('Red block is not on table')
+%         if sensorProcessing.noGreenBlock == false
+%             % Pick up green block
+%             disp('Pick up green block');
+%             fetch.PickUpBlock(sensorProcessing.greenBlock);
+%             % Place green block
+%             disp('Place green block near middle block');
+%             
+%             
+%             
+%             % -----------FIX UP CENTRE VARIABLES BELOW TO BE CENTRE OF CAM-------------%
+%             centre.X_base = [0;0;0]; 
+%             centre.quat = [sqrt(2),0,-sqrt(2),0];
+%             fetch.PlaceGrippedBlockOn(sensorProcessing.greenBlock, centre);
+%             
+%             
+%         else
+%             disp('Green block is not on table')
+%         end
+%     end
+%     
+%     % -----------INSERT MOVE TO ORIGIN HERE -----------%
+%     
+% end
