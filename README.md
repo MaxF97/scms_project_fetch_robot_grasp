@@ -45,3 +45,61 @@ The folder in this repository called 'assignment' must be saved in the following
 
      rosrun assignment builder.py
 4.4.  Start the program by running the MATLAB script 'FetchStack.m'
+
+
+Program Code Contributions:
+
+
+
+Dinh Dang Kha Le
+Max Farmer
+Samuel Gallagher
+Environment Setup and Configuration
+0%
+0%
+100%
+Sense Blocks position & Orientation
+0%
+100%
+0%
+Matlab ROS Publishing and Subscribing
+20%
+60%
+20%
+Python ROS Publishing and Subscribing
+80%
+0%
+20%
+Arm Movement
+75%
+5% (from matlab)
+20%
+Arm Gripping
+5%
+5% (from matlab)
+90%
+Program Logic 
+10%
+80%
+10%
+Program Testing
+33.3%
+33.3%
+33.3%
+Video Filming
+50%
+0%
+50%
+Video Editing
+5%
+90%
+5%
+OVERALL CONTRIBUTIONS
+33.3%
+33.3%
+
+
+33.3%
+
+
+
