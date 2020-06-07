@@ -77,4 +77,4 @@ This video demonstrates what we achieved. It shows the robot sensing each block,
 
 # Class Program Flow:
 
-![Class_Flow](https://user-images.githubusercontent.com/43405112/83962236-1fa06480-a8df-11ea-8db3-f0adf3609227.png)
+![Fetch Robot Program Flow](https://user-images.githubusercontent.com/43405112/83962278-8faeea80-a8df-11ea-9b45-a6aeb4d08e15.png)
