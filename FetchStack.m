@@ -45,7 +45,7 @@ if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == false
 else
     % blue block is present, red block is missing
     if sensorProcessing.noBlueBlock == false && sensorProcessing.noRedBlock == true
-        if sensorProcessing.noGreenBlock = true
+        if sensorProcessing.noGreenBlock == true
             disp('Only blue block is on table')
         else
             disp('Pick up green block');
@@ -58,7 +58,7 @@ else
         
     % blue block is missing, red block is present
     elseif sensorProcessing.noBlueBlock == true && sensorProcessing.noRedBlock == false
-        if sensorProcessing.noGreenBlock = true
+        if sensorProcessing.noGreenBlock == true
             disp('Only red block is on table')
         else
              disp('Pick up green block');
@@ -70,7 +70,7 @@ else
         end
     % blue and red blocks are missing
     else
-        if sensorProcessing.noGreenBlock = true
+        if sensorProcessing.noGreenBlock == true
             disp('No blocks on table')
         else
             disp('Only green block is on table');
